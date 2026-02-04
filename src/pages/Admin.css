@@ -483,19 +483,251 @@
 }
 
 /* ========================================
+   MOBILE HEADER
+======================================== */
+
+.admin-mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.admin-menu-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.admin-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-mobile-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffd16d;
+  margin: 0;
+}
+
+.admin-mobile-tab {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.admin-sidebar-close {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.admin-sidebar-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1001;
+}
+
+/* ========================================
    RESPONSIVE
 ======================================== */
 
 @media (max-width: 1024px) {
   .admin-panel {
     grid-template-columns: 1fr;
+    padding-top: 60px;
+  }
+
+  .admin-mobile-header {
+    display: flex;
+  }
+
+  .admin-overlay {
+    display: block;
   }
 
   .admin-sidebar {
-    display: none; /* Mobile menu to be implemented */
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    z-index: 1002;
+    border-radius: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: left 0.3s ease;
+    background: #0a0a0a;
+  }
+
+  .admin-sidebar.open {
+    left: 0;
+  }
+
+  .admin-sidebar-close {
+    display: block;
+  }
+
+  .admin-sidebar-header {
+    position: relative;
+    padding-right: 50px;
   }
 
   .admin-main {
-    padding: 20px;
+    padding: 20px 16px;
+    height: auto;
+    min-height: calc(100vh - 60px);
+  }
+
+  .admin-section {
+    padding: 16px;
+  }
+
+  .admin-section h2 {
+    font-size: 1.25rem;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    padding-top: 60px;
+  }
+
+  .admin-main {
+    padding: 16px 12px;
+  }
+
+  .admin-section {
+    padding: 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  .admin-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .revenue-card {
+    padding: 16px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .revenue-amount {
+    font-size: 1.5rem;
+  }
+
+  .revenue-card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .date-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-reset-orders {
+    width: 100%;
+  }
+
+  .custom-date-inputs {
+    flex-direction: column;
+  }
+
+  .custom-date-inputs span {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-mobile-header {
+    padding: 0 12px;
+    height: 56px;
+  }
+
+  .admin-mobile-title {
+    font-size: 1rem;
+  }
+
+  .admin-mobile-tab {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .admin-main {
+    padding: 12px 10px;
+  }
+
+  .admin-section {
+    padding: 12px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .stat-card-value {
+    font-size: 1.3rem;
+  }
+
+  .stat-card-label {
+    font-size: 0.8rem;
+  }
+
+  .stat-card-icon {
+    width: 36px;
+    height: 36px;
   }
 }

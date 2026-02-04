@@ -139,14 +139,51 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .admin-payment-methods {
+    gap: 16px;
+  }
+
   .payment-method-card {
     flex-direction: column;
     align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .method-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .method-name {
+    font-size: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .method-info {
+    width: 100%;
   }
 
   .method-actions {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: stretch;
+  }
+
+  .method-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .custom-field-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .btn-remove-field {
+    width: 100%;
+    height: auto;
+    padding: 10px;
   }
 }
 

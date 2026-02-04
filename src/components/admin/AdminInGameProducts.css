@@ -489,12 +489,163 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
+  .ingame-products-container {
+    gap: 16px;
+  }
+
+  .products-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-product {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .game-products-section {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .game-section-header {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .game-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .game-section-header h3 {
+    font-size: 16px;
+    flex-basis: calc(100% - 56px);
+  }
+
+  .products-count {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
   .products-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .product-image-wrapper {
+    height: 140px;
+  }
+
+  .product-info {
+    padding: 12px;
+  }
+
+  .product-info h4 {
+    font-size: 14px;
+  }
+
+  .product-type {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .robux-price {
+    font-size: 13px;
+  }
+
+  .usd-price {
+    font-size: 14px;
+  }
+
+  .product-actions {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .product-action-btn {
+    padding: 8px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .product-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .product-modal {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .product-modal-header {
+    padding: 16px;
+  }
+
+  .product-modal-header h3 {
+    font-size: 18px;
+  }
+
+  .product-form {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-cancel-modal,
+  .btn-save-modal {
+    width: 100%;
+  }
+
+  .products-empty {
+    padding: 40px 16px;
+  }
+
+  .products-empty h3 {
+    font-size: 18px;
+  }
+
+  .products-empty svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-section-header h3 {
+    font-size: 14px;
+  }
+
+  .product-image-wrapper {
+    height: 120px;
+  }
+
+  .rarity-badge {
+    font-size: 9px;
+    padding: 3px 8px;
   }
 }

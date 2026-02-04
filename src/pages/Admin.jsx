@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ShoppingBag, 
-  Package, 
-  Users, 
+import {
+  ShoppingBag,
+  Package,
+  Users,
   CreditCard,
   BarChart3,
   FileText,
@@ -14,7 +14,9 @@ import {
   LogOut,
   TrendingUp,
   Grid,
-  Home
+  Home,
+  Menu,
+  X
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import './Admin.css';
@@ -37,6 +39,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('adminActiveTab') || 'orders';
   });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { logout } = useAdminAuth();
   const navigate = useNavigate();
 
@@ -44,6 +47,12 @@ const Admin = () => {
   useEffect(() => {
     localStorage.setItem('adminActiveTab', activeTab);
   }, [activeTab]);
+
+  // Cerrar menú móvil al cambiar de tab
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setMobileMenuOpen(false);
+  };
 
   const handleLogout = () => {
     if (confirm('¿Cerrar sesión?')) {
@@ -70,11 +79,37 @@ const Admin = () => {
 
   return (
     <div className="admin-panel">
+      {/* Mobile Header */}
+      <div className="admin-mobile-header">
+        <button
+          className="admin-menu-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+        <h1 className="admin-mobile-title">Panel Admin</h1>
+        <span className="admin-mobile-tab">{tabs.find(t => t.id === activeTab)?.label}</span>
+      </div>
+
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div
+          className="admin-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
           <h2>Panel Admin</h2>
           <p>RLS Store</p>
+          <button
+            className="admin-sidebar-close"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <X size={24} />
+          </button>
         </div>
 
         <nav className="admin-nav">
@@ -84,7 +119,7 @@ const Admin = () => {
               <button
                 key={tab.id}
                 className={`admin-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
               >
                 <Icon size={20} />
                 <span>{tab.label}</span>
