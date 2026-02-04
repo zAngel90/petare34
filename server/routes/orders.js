@@ -35,6 +35,27 @@ router.get('/my-orders', async (req, res) => {
   }
 });
 
+// GET - Obtener órdenes por userId (para reviews)
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const db = getDB('orders');
+    await db.read();
+    
+    // Filtrar órdenes del usuario
+    let orders = (db.data.orders || []).filter(o => o.userId === parseInt(userId));
+    
+    // Ordenar por fecha (más reciente primero)
+    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    console.error('Error obteniendo órdenes del usuario:', error);
+    res.status(500).json({ success: false, error: 'Error al obtener órdenes' });
+  }
+});
+
 // GET - Obtener órdenes recientes públicas (para mostrar en páginas públicas)
 router.get('/recent', async (req, res) => {
   try {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Star, Upload, X, Send, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Star, Upload, X, Send, AlertCircle, Package } from 'lucide-react';
 import { API_CONFIG } from '../config/api';
 import './ReviewForm.css';
 
@@ -8,12 +8,42 @@ const ReviewForm = ({ user, onSuccess, onCancel }) => {
     rating: 0,
     title: '',
     comment: '',
-    images: []
+    images: [],
+    orderId: ''
   });
   const [hoverRating, setHoverRating] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [userOrders, setUserOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+
+  // Cargar órdenes del usuario
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      if (!user || !user.id) {
+        setLoadingOrders(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/orders/user/${user.id}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          // Filtrar solo órdenes completadas
+          const completedOrders = data.data?.filter(order => order.status === 'completed') || [];
+          setUserOrders(completedOrders);
+        }
+      } catch (error) {
+        console.error('Error cargando órdenes:', error);
+      } finally {
+        setLoadingOrders(false);
+      }
+    };
+
+    fetchUserOrders();
+  }, [user]);
 
   const handleRatingClick = (rating) => {
     setFormData({ ...formData, rating });
@@ -93,7 +123,8 @@ const ReviewForm = ({ user, onSuccess, onCancel }) => {
         title: formData.title,
         comment: formData.comment,
         images: formData.images,
-        productType: 'general'
+        productType: 'general',
+        orderId: formData.orderId ? parseInt(formData.orderId) : null
       };
 
       const response = await fetch(`${API_CONFIG.BASE_URL}/reviews`, {
@@ -164,6 +195,51 @@ const ReviewForm = ({ user, onSuccess, onCancel }) => {
           {formData.rating === 4 && '⭐⭐⭐⭐ Bueno'}
           {formData.rating === 5 && '⭐⭐⭐⭐⭐ Excelente'}
         </p>
+      </div>
+
+      {/* Selector de Órdenes */}
+      <div className="form-group">
+        <label className="form-label">
+          <Package size={18} />
+          Selecciona tu Pedido (Opcional)
+        </label>
+        {loadingOrders ? (
+          <div className="loading-orders">
+            <div className="spinner-small"></div>
+            Cargando tus pedidos...
+          </div>
+        ) : userOrders.length > 0 ? (
+          <>
+            <select
+              className="form-input"
+              value={formData.orderId}
+              onChange={(e) => setFormData({ ...formData, orderId: e.target.value })}
+            >
+              <option value="">Sin pedido asociado (Reseña general)</option>
+              {userOrders.map(order => (
+                <option key={order.id} value={order.id}>
+                  Pedido #{order.id} - {order.productDetails?.packageName || order.productType} 
+                  {' '}({new Date(order.createdAt).toLocaleDateString()})
+                </option>
+              ))}
+            </select>
+            <small className="form-hint" style={{ display: 'block', marginTop: '8px', color: formData.orderId ? '#00d084' : 'rgba(255, 255, 255, 0.6)' }}>
+              {formData.orderId 
+                ? '✓ Esta reseña estará vinculada a tu pedido y será verificada automáticamente'
+                : 'Puedes dejar una reseña general sin asociarla a un pedido específico'}
+            </small>
+          </>
+        ) : (
+          <div className="no-orders" style={{ 
+            background: 'rgba(255, 255, 255, 0.05)', 
+            padding: '16px', 
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <p style={{ margin: '0 0 8px 0', color: '#fff' }}>No tienes pedidos completados aún.</p>
+            <small style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Realiza una compra para poder dejar una reseña verificada.</small>
+          </div>
+        )}
       </div>
 
       {/* Title */}
