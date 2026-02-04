@@ -761,17 +761,15 @@ const GameItems = () => {
                 <div className="product-modal-info">
                   <div className="info-item">
                     <span className="info-label">Juego:</span>
-                    <span className="info-value">{selectedGame?.name || 'N/A'}</span>
+                    <span className="info-value">
+                      {selectedProduct.isLimited ? 'Roblox' : (selectedGame?.name || 'N/A')}
+                    </span>
                   </div>
                   <div className="info-item">
                     <span className="info-label">Categoría:</span>
                     <span className="info-value">{selectedProduct.category || 'General'}</span>
                   </div>
-                  <div className="info-item">
-                    <span className="info-label">Robux:</span>
-                    <span className="info-value">{selectedProduct.robuxAmount} Robux</span>
-                  </div>
-                  {selectedProduct.rarity && (
+                  {!selectedProduct.isLimited && selectedProduct.rarity && (
                     <div className="info-item">
                       <span className="info-label">Rareza:</span>
                       <span className="info-value" style={{ color: getRarityColor(selectedProduct.rarity) }}>
