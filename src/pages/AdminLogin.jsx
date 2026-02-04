@@ -63,7 +63,7 @@ const AdminLogin = () => {
             </label>
             <input
               type="email"
-              placeholder="admin@rlsstore.com"
+              placeholder="correo@ejemplo.com"
               value={credentials.email}
               onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
               required
@@ -96,9 +96,6 @@ const AdminLogin = () => {
 
           <div className="login-footer">
             <p>🔒 Acceso solo para administradores</p>
-            <p className="dev-note">
-              <strong>Dev:</strong> admin@rlsstore.com / admin123
-            </p>
           </div>
         </form>
       </div>
