@@ -100,7 +100,7 @@ const Accounts = () => {
 
             <div className="account-footer">
               <div className="account-price">
-                <span className="price">${account.price.toFixed(2)}</span>
+                <span className="price">${parseFloat(account.price || 0).toFixed(2)}</span>
               </div>
               <button
                 className="buy-btn"

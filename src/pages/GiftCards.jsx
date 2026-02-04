@@ -93,9 +93,9 @@ const GiftCards = () => {
 
             <div className="card-pricing">
               {card.originalPrice > card.price && (
-                <span className="original-price">${card.originalPrice.toFixed(2)}</span>
+                <span className="original-price">${parseFloat(card.originalPrice || 0).toFixed(2)}</span>
               )}
-              <span className="current-price">${card.price.toFixed(2)}</span>
+              <span className="current-price">${parseFloat(card.price || 0).toFixed(2)}</span>
             </div>
 
             <button

@@ -56,9 +56,9 @@ const ProductCard = ({ product, type = 'default' }) => {
 
       <div className="product-pricing">
         {product.originalPrice > product.price && (
-          <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+          <span className="original-price">${parseFloat(product.originalPrice || 0).toFixed(2)}</span>
         )}
-        <span className="current-price">${product.price.toFixed(2)}</span>
+        <span className="current-price">${parseFloat(product.price || 0).toFixed(2)}</span>
       </div>
 
       <button
@@ -104,9 +104,9 @@ const ProductCard = ({ product, type = 'default' }) => {
       <div className="product-footer">
         <div className="product-pricing">
           {product.originalPrice > product.price && (
-            <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+            <span className="original-price">${parseFloat(product.originalPrice || 0).toFixed(2)}</span>
           )}
-          <span className="current-price">${product.price.toFixed(2)}</span>
+          <span className="current-price">${parseFloat(product.price || 0).toFixed(2)}</span>
         </div>
 
         <button
@@ -169,9 +169,9 @@ const ProductCard = ({ product, type = 'default' }) => {
       <div className="product-footer">
         <div className="product-pricing">
           {product.originalPrice > product.price && (
-            <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+            <span className="original-price">${parseFloat(product.originalPrice || 0).toFixed(2)}</span>
           )}
-          <span className="current-price">${product.price.toFixed(2)}</span>
+          <span className="current-price">${parseFloat(product.price || 0).toFixed(2)}</span>
         </div>
 
         <button
@@ -204,9 +204,9 @@ const ProductCard = ({ product, type = 'default' }) => {
       <div className="product-footer">
         <div className="product-pricing">
           {product.originalPrice > product.price && (
-            <span className="original-price">${product.originalPrice.toFixed(2)}</span>
+            <span className="original-price">${parseFloat(product.originalPrice || 0).toFixed(2)}</span>
           )}
-          <span className="current-price">${product.price.toFixed(2)}</span>
+          <span className="current-price">${parseFloat(product.price || 0).toFixed(2)}</span>
         </div>
 
         <button

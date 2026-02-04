@@ -377,7 +377,7 @@ const Home = () => {
                           {primaryCurrency.symbol}{pkg.price}
                         </p>
                         <p className="package-price" style={{ color: '#00d084', fontWeight: 'bold', margin: 0 }}>
-                          {primaryCurrency.symbol}{(pkg.price * (1 - pkg.discount / 100)).toFixed(2)}
+                          {primaryCurrency.symbol}{(parseFloat(pkg.price || 0) * (1 - pkg.discount / 100)).toFixed(2)}
                         </p>
                       </>
                     ) : (

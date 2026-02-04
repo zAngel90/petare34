@@ -74,10 +74,10 @@ const Premium = () => {
 
             <div className="plan-pricing">
               {plan.originalPrice > plan.price && (
-                <span className="original-price">${plan.originalPrice.toFixed(2)}/mes</span>
+                <span className="original-price">${parseFloat(plan.originalPrice || 0).toFixed(2)}/mes</span>
               )}
               <div className="current-price">
-                <span className="price">${plan.price.toFixed(2)}</span>
+                <span className="price">${parseFloat(plan.price || 0).toFixed(2)}</span>
                 <span className="period">/mes</span>
               </div>
             </div>
