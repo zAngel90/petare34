@@ -113,6 +113,14 @@
   border-radius: 8px;
   color: #fff;
   font-size: 1rem;
+}
+
+/* Fix select dropdown */
+.form-input option,
+select.form-input option {
+  background: #1a1a1a;
+  color: #fff;
+}
   font-family: inherit;
   transition: all 0.3s ease;
 }

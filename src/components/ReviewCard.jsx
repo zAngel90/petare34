@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Star, ThumbsUp, CheckCircle, User, Calendar, Package } from 'lucide-react';
+import { API_CONFIG } from '../config/api';
 import './ReviewCard.css';
 
 const ReviewCard = ({ review, onHelpful }) => {
@@ -70,6 +71,12 @@ const ReviewCard = ({ review, onHelpful }) => {
                   {review.productType === 'robux' ? 'Robux' : review.productType}
                 </span>
               )}
+              {review.orderId && (
+                <span className="review-order-info" title="Pedido verificado">
+                  <Package size={14} />
+                  Pedido #{review.orderId}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -87,16 +94,19 @@ const ReviewCard = ({ review, onHelpful }) => {
         {/* Images */}
         {review.images && review.images.length > 0 && (
           <div className="review-images">
-            {review.images.slice(0, showAllImages ? review.images.length : 3).map((image, index) => (
-              <div key={index} className="review-image-wrapper">
-                <img 
-                  src={image} 
-                  alt={`Review image ${index + 1}`}
-                  className="review-image"
-                  onClick={() => window.open(image, '_blank')}
-                />
-              </div>
-            ))}
+            {review.images.slice(0, showAllImages ? review.images.length : 3).map((image, index) => {
+              const imageUrl = image.startsWith('http') ? image : `${API_CONFIG.SERVER_URL}${image}`;
+              return (
+                <div key={index} className="review-image-wrapper">
+                  <img 
+                    src={imageUrl} 
+                    alt={`Review image ${index + 1}`}
+                    className="review-image"
+                    onClick={() => window.open(imageUrl, '_blank')}
+                  />
+                </div>
+              );
+            })}
             {review.images.length > 3 && !showAllImages && (
               <button 
                 className="show-more-images"
