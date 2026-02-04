@@ -199,14 +199,14 @@ const AdminStats = () => {
     },
     {
       label: 'Revenue Total',
-      value: `$${stats?.totalRevenue?.toFixed(2) || '0.00'}`,
+      value: `S/${stats?.totalRevenue?.toFixed(2) || '0.00'}`,
       icon: DollarSign,
       color: '#ffd16d',
       change: null
     },
     {
       label: 'Revenue Pendiente',
-      value: `$${stats?.pendingRevenue?.toFixed(2) || '0.00'}`,
+      value: `S/${stats?.pendingRevenue?.toFixed(2) || '0.00'}`,
       icon: TrendingUp,
       color: '#ff9500',
       change: null
@@ -305,7 +305,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Robux</h3>
-                <div className="revenue-amount">${revenueByCategory.robux.toFixed(2)}</div>
+                <div className="revenue-amount">S/{revenueByCategory.robux.toFixed(2)}</div>
                 <div className="revenue-count">{revenueByCategory.count.robux} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -322,7 +322,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>In-Game Items</h3>
-                <div className="revenue-amount">${revenueByCategory.ingame.toFixed(2)}</div>
+                <div className="revenue-amount">S/{revenueByCategory.ingame.toFixed(2)}</div>
                 <div className="revenue-count">{revenueByCategory.count.ingame} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -339,7 +339,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Limiteds</h3>
-                <div className="revenue-amount">${revenueByCategory.limiteds.toFixed(2)}</div>
+                <div className="revenue-amount">S/{revenueByCategory.limiteds.toFixed(2)}</div>
                 <div className="revenue-count">{revenueByCategory.count.limiteds} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -356,7 +356,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Total Revenue</h3>
-                <div className="revenue-amount">${revenueByCategory.total.toFixed(2)}</div>
+                <div className="revenue-amount">S/{revenueByCategory.total.toFixed(2)}</div>
                 <div className="revenue-count">{revenueByCategory.count.total} órdenes</div>
                 <div className="revenue-percentage">100% del período</div>
               </div>

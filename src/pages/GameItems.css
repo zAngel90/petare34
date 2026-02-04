@@ -1380,6 +1380,7 @@
     transition: right 0.3s ease;
     border-left: none;
     border-radius: 0;
+    background: #0a0a0a;
   }
   
   .cart-sidebar.open {
