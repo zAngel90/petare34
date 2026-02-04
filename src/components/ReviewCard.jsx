@@ -71,10 +71,10 @@ const ReviewCard = ({ review, onHelpful }) => {
                   {review.productType === 'robux' ? 'Robux' : review.productType}
                 </span>
               )}
-              {review.orderId && (
-                <span className="review-order-info" title="Pedido verificado">
+              {review.orderDetails && (
+                <span className="review-order-info" title="Compra verificada">
                   <Package size={14} />
-                  Pedido #{review.orderId}
+                  Compró: {review.orderDetails.productName || review.orderDetails.packageName || `Pedido #${review.orderId}`}
                 </span>
               )}
             </div>

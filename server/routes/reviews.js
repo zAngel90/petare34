@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
     let reviews = reviewsDB.data.reviews || [];
 
     // Filtros
-    const { status, featured, minRating, userId, productType, limit } = req.query;
+    const { status, featured, minRating, rating, userId, productType, limit } = req.query;
 
     if (status) {
       reviews = reviews.filter(r => r.status === status);
@@ -39,6 +39,11 @@ router.get('/', async (req, res) => {
       reviews = reviews.filter(r => r.rating >= parseInt(minRating));
     }
 
+    // Filtro por rating exacto
+    if (rating) {
+      reviews = reviews.filter(r => r.rating === parseInt(rating));
+    }
+
     if (userId) {
       reviews = reviews.filter(r => r.userId === parseInt(userId));
     }
@@ -46,6 +51,28 @@ router.get('/', async (req, res) => {
     if (productType) {
       reviews = reviews.filter(r => r.productType === productType);
     }
+
+    // Enriquecer con detalles de orden
+    const ordersDB = getDB('orders');
+    await ordersDB.read();
+    const orders = ordersDB.data.orders || [];
+
+    reviews = reviews.map(review => {
+      if (review.orderId) {
+        const order = orders.find(o => o.id === review.orderId);
+        if (order) {
+          return {
+            ...review,
+            orderDetails: {
+              productName: order.productDetails?.itemName || null,
+              packageName: order.productDetails?.packageName || null,
+              productType: order.productType
+            }
+          };
+        }
+      }
+      return review;
+    });
 
     // Ordenar por fecha (más recientes primero)
     reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
