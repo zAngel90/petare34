@@ -1,0 +1,150 @@
+{
+  "conversations": [
+    {
+      "id": 1,
+      "userId": 1,
+      "userName": "zAngel",
+      "userEmail": "av020431@gmail.com",
+      "status": "open",
+      "unreadCount": 0,
+      "lastMessage": "hey que tal tengo un problema con mi pedido",
+      "lastMessageAt": "2026-02-02T20:06:04.439Z",
+      "createdAt": "2026-02-02T19:56:09.363Z",
+      "updatedAt": "2026-02-02T20:06:04.439Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "userName": "petare",
+      "userEmail": "mimoso@gmail.com",
+      "status": "open",
+      "unreadCount": 0,
+      "lastMessage": "hola estimado",
+      "lastMessageAt": "2026-02-03T02:14:25.627Z",
+      "createdAt": "2026-02-02T20:07:34.355Z",
+      "updatedAt": "2026-02-03T02:14:25.627Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "conversationId": 1,
+      "senderId": 1,
+      "senderName": "zAngel",
+      "senderType": "user",
+      "message": "hola",
+      "read": true,
+      "createdAt": "2026-02-02T19:56:14.469Z"
+    },
+    {
+      "id": 2,
+      "conversationId": 1,
+      "senderId": "admin",
+      "senderName": "Soporte",
+      "senderType": "admin",
+      "message": "hola",
+      "read": true,
+      "createdAt": "2026-02-02T19:56:49.186Z"
+    },
+    {
+      "id": 3,
+      "conversationId": 1,
+      "senderId": 1,
+      "senderName": "zAngel",
+      "senderType": "user",
+      "message": "como estas",
+      "read": true,
+      "createdAt": "2026-02-02T19:56:57.217Z"
+    },
+    {
+      "id": 4,
+      "conversationId": 1,
+      "senderId": 1,
+      "senderName": "zAngel",
+      "senderType": "user",
+      "message": "hola",
+      "read": true,
+      "createdAt": "2026-02-02T20:00:10.199Z"
+    },
+    {
+      "id": 5,
+      "conversationId": 1,
+      "senderId": 1,
+      "senderName": "zAngel",
+      "senderType": "user",
+      "message": "hey que tal tengo un problema con mi pedido",
+      "read": true,
+      "createdAt": "2026-02-02T20:06:04.439Z"
+    },
+    {
+      "id": 6,
+      "conversationId": 2,
+      "senderId": 2,
+      "senderName": "petare",
+      "senderType": "user",
+      "message": "hola como estas?",
+      "read": true,
+      "createdAt": "2026-02-02T20:07:37.931Z"
+    },
+    {
+      "id": 7,
+      "conversationId": 2,
+      "senderId": "admin",
+      "senderName": "Soporte",
+      "senderType": "admin",
+      "message": "hola en que puedo ayudarte",
+      "read": true,
+      "createdAt": "2026-02-02T20:07:59.484Z"
+    },
+    {
+      "id": 8,
+      "conversationId": 2,
+      "senderId": 2,
+      "senderName": "petare",
+      "senderType": "user",
+      "message": "hola como estas",
+      "read": true,
+      "createdAt": "2026-02-03T02:13:54.097Z"
+    },
+    {
+      "id": 9,
+      "conversationId": 2,
+      "senderId": 2,
+      "senderName": "petare",
+      "senderType": "user",
+      "message": "necesito soportye",
+      "read": true,
+      "createdAt": "2026-02-03T02:13:56.311Z"
+    },
+    {
+      "id": 10,
+      "conversationId": 2,
+      "senderId": 2,
+      "senderName": "petare",
+      "senderType": "user",
+      "message": "me robaron",
+      "read": true,
+      "createdAt": "2026-02-03T02:13:57.884Z"
+    },
+    {
+      "id": 11,
+      "conversationId": 2,
+      "senderId": 2,
+      "senderName": "petare",
+      "senderType": "user",
+      "message": "devuelvame mi dinero",
+      "read": true,
+      "createdAt": "2026-02-03T02:14:02.146Z"
+    },
+    {
+      "id": 12,
+      "conversationId": 2,
+      "senderId": "admin",
+      "senderName": "Soporte",
+      "senderType": "admin",
+      "message": "hola estimado",
+      "read": true,
+      "createdAt": "2026-02-03T02:14:25.627Z"
+    }
+  ]
+}

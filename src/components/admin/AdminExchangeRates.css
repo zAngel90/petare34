@@ -1,0 +1,267 @@
+.exchange-rates-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rate-message {
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.rate-message.success {
+  background: #00d08420;
+  color: #00d084;
+  border: 1px solid #00d08440;
+}
+
+.rate-message.error {
+  background: #ff475720;
+  color: #ff4757;
+  border: 1px solid #ff475740;
+}
+
+.rates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+.rate-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rate-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #333;
+}
+
+.rate-card-header svg {
+  color: #ffd16d;
+}
+
+.rate-card-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+/* Current Rate */
+.current-rate .rate-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  background: #ffd16d20;
+  border: 2px solid #ffd16d40;
+  border-radius: 12px;
+}
+
+.rate-label {
+  font-size: 14px;
+  color: #888;
+  font-weight: 600;
+}
+
+.rate-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffd16d;
+}
+
+.rate-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rate-meta p {
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+}
+
+.rate-date {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.rate-by {
+  color: #ffd16d !important;
+  font-weight: 600;
+}
+
+/* Edit Rate */
+.rate-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rate-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rate-input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.rate-input-group input {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.rate-input-group input:focus {
+  outline: none;
+  border-color: #ffd16d;
+  box-shadow: 0 0 0 3px rgba(255, 209, 109, 0.1);
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #888;
+}
+
+.rate-preview {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.rate-preview h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.preview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.preview-item span:first-child {
+  color: #ffd16d;
+}
+
+.preview-item span:nth-child(2) {
+  color: #888;
+}
+
+.preview-item span:last-child {
+  color: #fff;
+}
+
+.btn-save-rate {
+  padding: 14px 24px;
+  background: #ffd16d;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-save-rate:hover:not(:disabled) {
+  background: #ffbe3d;
+  transform: translateY(-2px);
+}
+
+.btn-save-rate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Examples */
+.examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.example-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.example-btn:hover {
+  border-color: #ffd16d;
+  background: #ffd16d10;
+}
+
+.example-btn span:first-child {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffd16d;
+}
+
+.example-btn span:last-child {
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "robuxPackages": [
+    {
+      "id": 1,
+      "amount": 400,
+      "price": 18.46,
+      "discount": 0,
+      "popular": false,
+      "active": true,
+      "currency": "PEN",
+      "createdAt": "2026-02-02T21:33:23.918Z"
+    },
+    {
+      "id": 2,
+      "amount": 800,
+      "price": 36.96,
+      "discount": 0,
+      "popular": true,
+      "active": true,
+      "currency": "PEN",
+      "createdAt": "2026-02-02T21:33:23.919Z"
+    },
+    {
+      "id": 3,
+      "amount": 1700,
+      "price": 73.96,
+      "discount": 0,
+      "popular": false,
+      "active": true,
+      "currency": "PEN",
+      "createdAt": "2026-02-02T21:33:23.919Z"
+    },
+    {
+      "id": 4,
+      "amount": "4500",
+      "price": 184.96,
+      "discount": "5",
+      "popular": false,
+      "active": true,
+      "currency": "PEN",
+      "createdAt": "2026-02-02T21:33:23.919Z",
+      "updatedAt": "2026-02-03T01:57:40.515Z"
+    },
+    {
+      "id": 5,
+      "amount": 10000,
+      "price": "120",
+      "discount": 15,
+      "popular": false,
+      "active": true,
+      "currency": "PEN",
+      "createdAt": "2026-02-02T21:33:23.919Z",
+      "updatedAt": "2026-02-03T23:47:08.122Z"
+    }
+  ],
+  "inGameProducts": [
+    {
+      "id": 1,
+      "game": "4324",
+      "itemName": "3232323",
+      "itemType": "Pases",
+      "robuxAmount": 100,
+      "price": 74,
+      "description": "fsfsfsf",
+      "image": "http://localhost:3001/uploads/1770069066587-31s0bkv4a1687380842018 (1).jpg",
+      "rarity": "COMMON",
+      "currency": "PEN",
+      "active": true,
+      "createdAt": "2026-02-02T21:51:08.797Z"
+    },
+    {
+      "id": 2,
+      "game": "4324",
+      "itemName": "FSDFSDF",
+      "itemType": "Items",
+      "robuxAmount": 100,
+      "price": 37,
+      "description": "FSDFSDFSDF",
+      "image": "http://localhost:3001/uploads/1770083933022-giyvdosqq3.png",
+      "rarity": "COMMON",
+      "currency": "PEN",
+      "active": true,
+      "createdAt": "2026-02-03T01:58:54.873Z"
+    },
+    {
+      "id": 3,
+      "game": "juego-3",
+      "itemName": "fsdfsdf",
+      "itemType": "Frutas",
+      "robuxAmount": 10000,
+      "price": 37,
+      "description": "gfsfsdf",
+      "image": "http://localhost:3001/uploads/1770083984978-vtfpl49y68568d5ac-090b-47d0-b0e8-c7c34fc73271.png",
+      "rarity": "COMMON",
+      "currency": "PEN",
+      "active": true,
+      "createdAt": "2026-02-03T01:59:46.730Z"
+    },
+    {
+      "id": 4,
+      "game": "limiteds",
+      "itemName": "sdfsdfsdf",
+      "itemType": "Frutas",
+      "robuxAmount": 100,
+      "price": 18.5,
+      "description": "fsdfsdff",
+      "image": "http://localhost:3001/uploads/1770152172950-9wyjggrbpRLS_LOGO.png",
+      "rarity": "RARE",
+      "isLimited": true,
+      "currency": "PEN",
+      "active": true,
+      "createdAt": "2026-02-03T20:56:17.091Z",
+      "updatedAt": "2026-02-03T22:22:07.150Z"
+    },
+    {
+      "id": 5,
+      "game": "limiteds",
+      "itemName": "DFASFSDF",
+      "itemType": "PRUEBA",
+      "robuxAmount": 100,
+      "price": 55.5,
+      "description": "SFSDFSF",
+      "image": "http://localhost:3001/uploads/1770156944259-0d1ccxiz1RLS_LOGO.png",
+      "rarity": "",
+      "isLimited": true,
+      "currency": "PEN",
+      "active": true,
+      "createdAt": "2026-02-03T22:15:46.313Z",
+      "updatedAt": "2026-02-03T22:21:58.367Z"
+    }
+  ]
+}

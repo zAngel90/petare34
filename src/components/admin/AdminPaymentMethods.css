@@ -1,0 +1,259 @@
+/* ========================================
+   ADMIN PAYMENT METHODS
+======================================== */
+
+.admin-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.payment-method-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.payment-method-card.inactive {
+  opacity: 0.5;
+}
+
+.method-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 209, 109, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.method-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.method-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.inactive-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.method-type {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.method-description {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+}
+
+.method-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.method-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-toggle {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  width: 40px;
+  height: 40px;
+}
+
+.btn-toggle:hover {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+.btn-edit {
+  background: rgba(255, 209, 109, 0.1);
+  color: #ffd16d;
+  border: 1px solid rgba(255, 209, 109, 0.3);
+  width: 40px;
+  height: 40px;
+}
+
+.btn-edit:hover {
+  background: rgba(255, 209, 109, 0.2);
+}
+
+.btn-delete {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  width: 40px;
+  height: 40px;
+}
+
+.btn-delete:hover {
+  background: rgba(255, 71, 87, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payment-method-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .method-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Logo upload styles */
+.form-group input[type="file"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: #ffd16d;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.logo-preview-container {
+  margin-top: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.logo-preview {
+  max-width: 200px;
+  max-height: 100px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Custom Fields Styles */
+.custom-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.custom-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-key-input,
+.field-value-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.field-key-input:focus,
+.field-value-input:focus {
+  border-color: #ffd16d;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-remove-field {
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  color: #ff4757;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-remove-field:hover {
+  background: rgba(255, 71, 87, 0.2);
+  border-color: rgba(255, 71, 87, 0.5);
+}
+
+.btn-add-field {
+  background: rgba(255, 209, 109, 0.1);
+  border: 2px dashed rgba(255, 209, 109, 0.3);
+  color: #ffd16d;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.btn-add-field:hover {
+  background: rgba(255, 209, 109, 0.15);
+  border-color: rgba(255, 209, 109, 0.5);
+}

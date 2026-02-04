@@ -1,0 +1,25 @@
+{
+  "reviews": [
+    {
+      "id": 1,
+      "userId": 2,
+      "userName": "petare",
+      "userAvatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=9tzjiu",
+      "rating": 5,
+      "title": "buena experiencia",
+      "comment": "LA VERDAD TODO  BIEN",
+      "images": [
+        "http://localhost:3001/uploads/1770148946599-zg3ijwxv1descarga.jpg"
+      ],
+      "productType": "general",
+      "orderId": null,
+      "verified": false,
+      "featured": false,
+      "helpful": 1,
+      "status": "approved",
+      "adminResponse": "",
+      "createdAt": "2026-02-03T20:02:27.788Z",
+      "updatedAt": "2026-02-03T20:04:39.974Z"
+    }
+  ]
+}

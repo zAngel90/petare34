@@ -1,0 +1,132 @@
+{
+  "slides": [
+    {
+      "id": 1,
+      "type": "corporate",
+      "title": "Robux Premium Bundle",
+      "description": "Get the best value with our exclusive bundles",
+      "image": "https://via.placeholder.com/1200x500",
+      "active": true,
+      "order": 1,
+      "buttons": [
+        {
+          "text": "Shop Now",
+          "url": "/robux",
+          "style": "primary"
+        },
+        {
+          "text": "Learn More",
+          "url": "/catalogo",
+          "style": "secondary"
+        }
+      ],
+      "createdAt": "2026-02-02T22:09:53.320Z"
+    },
+    {
+      "id": 2,
+      "type": "custom",
+      "title": "",
+      "description": "",
+      "image": "http://localhost:3001/uploads/1770071391714-af7jz3qiz1687380842018 (1).jpg",
+      "buttons": [],
+      "active": true,
+      "order": 1,
+      "createdAt": "2026-02-02T22:29:51.742Z"
+    },
+    {
+      "id": 3,
+      "type": "custom",
+      "title": "",
+      "description": "",
+      "image": "http://localhost:3001/uploads/1770073662317-4m6d38ctsnueva.png",
+      "buttons": [],
+      "active": true,
+      "order": 1,
+      "createdAt": "2026-02-02T23:07:42.360Z"
+    },
+    {
+      "id": 4,
+      "type": "corporate",
+      "title": "prueba",
+      "description": "fsfsfsf",
+      "image": "http://localhost:3001/uploads/1770083575670-jteryehsh8568d5ac-090b-47d0-b0e8-c7c34fc73271.png",
+      "buttons": [
+        {
+          "text": "COMPRAR AHORA ",
+          "url": "/robux",
+          "style": "primary"
+        }
+      ],
+      "active": true,
+      "order": 1,
+      "createdAt": "2026-02-03T01:52:55.699Z"
+    },
+    {
+      "id": 5,
+      "type": "custom",
+      "title": "",
+      "description": "",
+      "image": "http://localhost:3001/uploads/1770083593835-img6ofd9tChatGPT Image 17 ene 2026, 00_28_06.png",
+      "buttons": [],
+      "active": true,
+      "order": 1,
+      "createdAt": "2026-02-03T01:53:13.855Z"
+    }
+  ],
+  "featuredProducts": {
+    "topSales": [
+      {
+        "id": 1770083725394,
+        "productId": 1,
+        "productType": "robux",
+        "customAmount": 100,
+        "customPrice": 10,
+        "soldCount": 300,
+        "order": 1,
+        "active": true
+      },
+      {
+        "id": 1770083727956,
+        "productId": 1,
+        "productType": "ingame",
+        "customAmount": 100,
+        "customPrice": 10,
+        "soldCount": 10,
+        "order": 2,
+        "active": true
+      },
+      {
+        "id": 1770083729120,
+        "productId": 1,
+        "productType": "robux",
+        "customAmount": 100,
+        "customPrice": 10,
+        "soldCount": 0,
+        "order": 3,
+        "active": true
+      }
+    ],
+    "trending": [
+      {
+        "id": 1770083783397,
+        "productId": 1,
+        "productType": "robux",
+        "customAmount": 100,
+        "customPrice": 10,
+        "soldCount": 30,
+        "order": 1,
+        "active": true
+      },
+      {
+        "id": 1770083793670,
+        "productId": 1,
+        "productType": "robux",
+        "customAmount": 1110,
+        "customPrice": 0,
+        "soldCount": 0,
+        "order": 2,
+        "active": true
+      }
+    ]
+  }
+}

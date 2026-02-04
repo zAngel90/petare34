@@ -1,0 +1,142 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "userId": null,
+      "userEmail": "elias@example.com",
+      "robloxUsername": "EliasGamer",
+      "robloxUserId": "12345",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 1,
+        "packageName": "800 Robux"
+      },
+      "amount": 800,
+      "price": 9.99,
+      "currency": "USD",
+      "paymentMethod": "gamepass",
+      "status": "completed",
+      "paymentProof": "/uploads/proof1.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T15:30:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T14:20:00.000Z",
+      "updatedAt": "2026-02-03T15:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "userId": null,
+      "userEmail": "maria@example.com",
+      "robloxUsername": "mariaPro",
+      "robloxUserId": "23456",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 3,
+        "packageName": "1700 Robux"
+      },
+      "amount": 1700,
+      "price": 19.99,
+      "currency": "USD",
+      "paymentMethod": "grupo",
+      "status": "completed",
+      "paymentProof": "/uploads/proof2.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T16:45:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T16:15:00.000Z",
+      "updatedAt": "2026-02-03T16:45:00.000Z"
+    },
+    {
+      "id": 3,
+      "userId": null,
+      "userEmail": "pedro@example.com",
+      "robloxUsername": "pedrox123",
+      "robloxUserId": "34567",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 2,
+        "packageName": "400 Robux"
+      },
+      "amount": 400,
+      "price": 4.99,
+      "currency": "USD",
+      "paymentMethod": "gamepass",
+      "status": "completed",
+      "paymentProof": "/uploads/proof3.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T16:50:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T16:40:00.000Z",
+      "updatedAt": "2026-02-03T16:50:00.000Z"
+    },
+    {
+      "id": 4,
+      "userId": null,
+      "userEmail": "tiago@example.com",
+      "robloxUsername": "ti_gamer",
+      "robloxUserId": "45678",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 4,
+        "packageName": "4500 Robux"
+      },
+      "amount": 4500,
+      "price": 49.99,
+      "currency": "USD",
+      "paymentMethod": "gamepass",
+      "status": "completed",
+      "paymentProof": "/uploads/proof4.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T15:00:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T14:45:00.000Z",
+      "updatedAt": "2026-02-03T15:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "userId": null,
+      "userEmail": "gyselle@example.com",
+      "robloxUsername": "GyselleQueen",
+      "robloxUserId": "56789",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 1,
+        "packageName": "800 Robux"
+      },
+      "amount": 800,
+      "price": 9.99,
+      "currency": "USD",
+      "paymentMethod": "grupo",
+      "status": "completed",
+      "paymentProof": "/uploads/proof5.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T14:30:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T14:00:00.000Z",
+      "updatedAt": "2026-02-03T14:30:00.000Z"
+    },
+    {
+      "id": 6,
+      "userId": null,
+      "userEmail": "elena@example.com",
+      "robloxUsername": "ElenaStars",
+      "robloxUserId": "67890",
+      "productType": "robux",
+      "productDetails": {
+        "packageId": 5,
+        "packageName": "10000 Robux"
+      },
+      "amount": 10000,
+      "price": 99.99,
+      "currency": "USD",
+      "paymentMethod": "gamepass",
+      "status": "completed",
+      "paymentProof": "/uploads/proof6.jpg",
+      "adminNotes": "",
+      "verifiedAt": "2026-02-03T13:30:00.000Z",
+      "verifiedBy": "admin@rlsstore.com",
+      "createdAt": "2026-02-03T13:00:00.000Z",
+      "updatedAt": "2026-02-03T13:30:00.000Z"
+    }
+  ]
+}

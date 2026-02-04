@@ -1,0 +1,62 @@
+{
+  "methods": [
+    {
+      "id": "bank_transfer",
+      "name": "Transferencia Bancaria",
+      "type": "bank",
+      "active": true,
+      "config": {
+        "bankName": "",
+        "accountNumber": "",
+        "accountHolder": "",
+        "accountType": "",
+        "identification": ""
+      },
+      "createdAt": "2026-02-03T00:30:22.884Z"
+    },
+    {
+      "id": "fsdf-1770078747036",
+      "name": "fsdf",
+      "type": "fsdf",
+      "description": "sfsdfsdf",
+      "icon": "fdsf",
+      "logo": "http://localhost:3001/uploads/1770078747006-h4vv3g7xcB68D22B7-282D-4CF5-AE1A-0DA6331A3EBD-Photoroom.png",
+      "active": true,
+      "config": {
+        "NUMERO DE CUENTA": "43242424",
+        "FSDF": "SFSDFSFD"
+      },
+      "createdAt": "2026-02-03T00:32:27.036Z",
+      "updatedAt": "2026-02-03T00:47:17.798Z"
+    },
+    {
+      "id": "nequi-1770084039875",
+      "name": "NEQUI",
+      "type": "CUENT AHORROS ",
+      "description": "NEQUI",
+      "icon": "NEQUI00",
+      "logo": "http://localhost:3001/uploads/1770084039863-kcsaa3m2pdescarga.jpg",
+      "active": true,
+      "config": {
+        "NUMERO DE NEQUI": "3105334580"
+      },
+      "createdAt": "2026-02-03T02:00:39.875Z",
+      "updatedAt": "2026-02-03T02:02:04.590Z"
+    },
+    {
+      "id": "dasdasd-1770149718390",
+      "name": "dasdasd",
+      "type": "dasdasd",
+      "description": "adasdasd",
+      "icon": "ad",
+      "logo": "http://localhost:3001/uploads/1770149718370-1r98srvnrdescarga.jpg",
+      "active": true,
+      "config": {
+        "PAGA VIA ": "EL CODIGO DE ARRIBA"
+      },
+      "createdAt": "2026-02-03T20:15:18.390Z",
+      "qrImage": "http://localhost:3001/uploads/1770149833398-cgzyhfsywRLS_LOGO.png",
+      "updatedAt": "2026-02-03T20:17:13.419Z"
+    }
+  ]
+}

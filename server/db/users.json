@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "av020431@gmail.com",
+      "password": "$2a$10$4Ov1SqNsUKsjZzZ3XpSdq.gapJKfb5mGh2TuZm.DH/cLWUyl2B5ji",
+      "username": "zAngel",
+      "robloxUsername": "",
+      "robloxUserId": null,
+      "avatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=mpsks",
+      "role": "user",
+      "active": true,
+      "balance": 0,
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "createdAt": "2026-02-02T19:55:57.924Z"
+    },
+    {
+      "id": 2,
+      "email": "mimoso@gmail.com",
+      "password": "$2a$10$NxJatfMuc0kCx02aqQUCZeiqQ.c0qdjpYVBYaVizCmt14niZ2rtVe",
+      "username": "petare",
+      "robloxUsername": "",
+      "robloxUserId": null,
+      "avatar": "http://localhost:3001/uploads/avatar-1770158971149-njd239m7eRLS_LOGO.png",
+      "role": "user",
+      "active": true,
+      "balance": 0,
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "createdAt": "2026-02-02T20:07:07.567Z",
+      "updatedAt": "2026-02-03T22:49:31.188Z"
+    },
+    {
+      "id": 3,
+      "email": "petare34@gmail.com",
+      "password": "$2a$10$WZ55HO3DJVZeVYAjGqqJGegmknUUgfwCnpFICnR3ki0rmrMUb9TcG",
+      "username": "dasdad",
+      "robloxUsername": "",
+      "robloxUserId": null,
+      "avatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=v7iid",
+      "role": "user",
+      "active": true,
+      "balance": 0,
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "createdAt": "2026-02-03T23:02:36.847Z",
+      "updatedAt": "2026-02-03T23:05:43.217Z"
+    },
+    {
+      "id": 4,
+      "email": "angel34@gmail.com",
+      "password": "$2a$10$EKYp1ur4Tdl6pv46F7feB.AgW61dnBCpJoCue/Z0WvF8WI.KJJFRO",
+      "username": "petaregangn",
+      "robloxUsername": "",
+      "robloxUserId": null,
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=angel34@gmail.com",
+      "role": "user",
+      "active": true,
+      "balance": 0,
+      "totalOrders": 0,
+      "totalSpent": 0,
+      "createdAt": "2026-02-03T23:04:48.869Z"
+    }
+  ]
+}
