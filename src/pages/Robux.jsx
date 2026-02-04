@@ -280,6 +280,7 @@ const Robux = () => {
                       onClick={() => {
                         setSelectedPackage(pkg);
                         setSelectedAmount(pkg.amount);
+                        setCustomAmount(''); // Limpiar campo personalizado
                       }}
                     >
                       <img src="/robux-logo.svg" alt="R$" className="robux-icon-small" />
@@ -297,16 +298,22 @@ const Robux = () => {
                       onChange={(e) => {
                         const value = e.target.value;
                         setCustomAmount(value);
-                        // Actualizar selectedAmount si es un número válido
+                        // Deseleccionar paquete y actualizar selectedAmount si es un número válido
                         if (value && !isNaN(value) && parseInt(value) > 0) {
+                          setSelectedPackage(null);
                           setSelectedAmount(parseInt(value));
                         }
                       }}
                       onBlur={() => {
                         // Al perder el foco, asegurar que esté seleccionado
                         if (customAmount && !isNaN(customAmount) && parseInt(customAmount) > 0) {
+                          setSelectedPackage(null);
                           setSelectedAmount(parseInt(customAmount));
                         }
+                      }}
+                      onFocus={() => {
+                        // Al hacer focus, deseleccionar cualquier paquete
+                        setSelectedPackage(null);
                       }}
                     />
                   </div>

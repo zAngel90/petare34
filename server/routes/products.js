@@ -125,8 +125,13 @@ router.post('/ingame', requireAdmin, logAdminAction, async (req, res) => {
   try {
     const { game, itemName, itemType, robuxAmount, price, description, image, rarity, isLimited, active } = req.body;
     
-    if (!game || !itemName || !robuxAmount || !price) {
+    // Validación: robuxAmount es opcional para Limiteds
+    if (!game || !itemName || !price) {
       return res.status(400).json({ success: false, error: 'Faltan campos requeridos' });
+    }
+    
+    if (!isLimited && !robuxAmount) {
+      return res.status(400).json({ success: false, error: 'La cantidad de Robux es requerida para productos regulares' });
     }
     
     const db = getDB('products');
@@ -137,11 +142,11 @@ router.post('/ingame', requireAdmin, logAdminAction, async (req, res) => {
       game,
       itemName,
       itemType: itemType || 'Items',
-      robuxAmount: parseInt(robuxAmount),
+      robuxAmount: robuxAmount ? parseInt(robuxAmount) : null, // Puede ser null para Limiteds
       price: parseFloat(price),
       description: description || '',
       image: image || '',
-      rarity: rarity || 'COMMON',
+      rarity: rarity || '', // Permitir vacío, no forzar 'COMMON'
       isLimited: isLimited || false,
       active: active !== false,
       createdAt: new Date().toISOString()
@@ -164,6 +169,25 @@ router.put('/ingame/:id', requireAdmin, logAdminAction, async (req, res) => {
   try {
     const { id } = req.params;
     const updates = req.body;
+    
+    // Validar robuxAmount si se está actualizando
+    if ('robuxAmount' in updates && 'isLimited' in updates) {
+      if (!updates.isLimited && !updates.robuxAmount) {
+        return res.status(400).json({ 
+          success: false, 
+          error: 'La cantidad de Robux es requerida para productos regulares' 
+        });
+      }
+    }
+    
+    // Procesar updates: permitir robuxAmount null y rarity vacío
+    if ('robuxAmount' in updates) {
+      updates.robuxAmount = updates.robuxAmount ? parseInt(updates.robuxAmount) : null;
+    }
+    
+    if ('rarity' in updates && !updates.rarity) {
+      updates.rarity = ''; // Permitir vacío
+    }
     
     const db = getDB('products');
     await db.read();

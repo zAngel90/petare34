@@ -107,7 +107,7 @@ const AdminInGameProducts = () => {
         price: '',
         description: '',
         image: '',
-        rarity: 'COMMON',
+        rarity: '',
         isLimited: false,
         active: true
       });
@@ -183,8 +183,14 @@ const AdminInGameProducts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.itemName || !formData.robuxAmount || !formData.price) {
+    // Validar campos requeridos (robuxAmount es opcional para Limiteds)
+    if (!formData.itemName || !formData.price) {
       setMessage({ type: 'error', text: '❌ Completa todos los campos requeridos' });
+      return;
+    }
+
+    if (!formData.isLimited && !formData.robuxAmount) {
+      setMessage({ type: 'error', text: '❌ La cantidad de Robux es requerida para productos regulares' });
       return;
     }
 
@@ -434,14 +440,19 @@ const AdminInGameProducts = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label>Cantidad de Robux *</label>
+                  <label>Cantidad de Robux {!formData.isLimited && '*'}</label>
                   <input
                     type="number"
                     value={formData.robuxAmount}
                     onChange={(e) => setFormData({ ...formData, robuxAmount: e.target.value })}
-                    placeholder="1000"
-                    required
+                    placeholder={formData.isLimited ? "Opcional para Limiteds" : "1000"}
+                    required={!formData.isLimited}
                   />
+                  {formData.isLimited && (
+                    <small style={{ color: 'rgba(255, 215, 0, 0.7)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      Para Limiteds este campo es opcional
+                    </small>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -458,17 +469,21 @@ const AdminInGameProducts = () => {
 
                 <div className="form-group">
                   <label>Rareza (Opcional)</label>
-                  <select
+                  <input
+                    type="text"
                     value={formData.rarity}
                     onChange={(e) => setFormData({ ...formData, rarity: e.target.value })}
-                  >
-                    <option value="">Sin rareza / No aplica</option>
+                    placeholder="Escribe o selecciona: COMMON, RARE, etc."
+                    list="rarity-suggestions"
+                  />
+                  <datalist id="rarity-suggestions">
+                    <option value="" />
                     {rarities.map((rarity) => (
-                      <option key={rarity} value={rarity}>{rarity}</option>
+                      <option key={rarity} value={rarity} />
                     ))}
-                  </select>
+                  </datalist>
                   <small style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
-                    Algunos productos no necesitan rareza
+                    Puedes escribir cualquier rareza personalizada o dejar vacío
                   </small>
                 </div>
               </div>
