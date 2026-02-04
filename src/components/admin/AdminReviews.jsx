@@ -416,14 +416,17 @@ const AdminReviews = () => {
                 <div className="review-detail-section">
                   <h4>Imágenes adjuntas</h4>
                   <div className="review-images-grid">
-                    {selectedReview.images.map((image, index) => (
-                      <img 
-                        key={index}
-                        src={image} 
-                        alt={`Review ${index + 1}`}
-                        onClick={() => window.open(image, '_blank')}
-                      />
-                    ))}
+                    {selectedReview.images.map((image, index) => {
+                      const imageUrl = image.startsWith('http') ? image : `${API_CONFIG.SERVER_URL}${image}`;
+                      return (
+                        <img 
+                          key={index}
+                          src={imageUrl} 
+                          alt={`Review ${index + 1}`}
+                          onClick={() => window.open(imageUrl, '_blank')}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
               )}

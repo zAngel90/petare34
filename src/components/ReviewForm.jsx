@@ -297,18 +297,21 @@ const ReviewForm = ({ user, onSuccess, onCancel }) => {
             </label>
           )}
 
-          {formData.images.map((image, index) => (
-            <div key={index} className="image-preview">
-              <img src={image} alt={`Preview ${index + 1}`} />
-              <button 
-                type="button"
-                className="remove-image-btn"
-                onClick={() => removeImage(index)}
-              >
-                <X size={16} />
-              </button>
-            </div>
-          ))}
+          {formData.images.map((image, index) => {
+            const imageUrl = image.startsWith('http') ? image : `${API_CONFIG.SERVER_URL}${image}`;
+            return (
+              <div key={index} className="image-preview">
+                <img src={imageUrl} alt={`Preview ${index + 1}`} />
+                <button 
+                  type="button"
+                  className="remove-image-btn"
+                  onClick={() => removeImage(index)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
