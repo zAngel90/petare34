@@ -711,21 +711,21 @@
 
 .packages-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
 }
 
 .package-card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 16px;
   text-align: center;
   position: relative;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  min-height: 280px;
+  min-height: 220px;
 }
 
 .package-card:hover {
@@ -747,9 +747,9 @@
 }
 
 .package-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 16px;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -762,10 +762,10 @@
 }
 
 .package-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: #fff;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
 }
 
 .package-price {
@@ -823,15 +823,15 @@
 
 .ingame-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
   max-width: 1400px;
 }
 
 .ingame-product-card {
   background: rgba(10, 10, 10, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -866,20 +866,24 @@
 .ingame-card-image {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 140px;
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.9));
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
 }
 
 .ingame-card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  object-fit: contain;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .ingame-product-card:hover .ingame-card-image img {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .ingame-placeholder {
@@ -891,20 +895,9 @@
   background: rgba(0, 0, 0, 0.5);
 }
 
-.ingame-card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 80%);
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-  z-index: 2;
-}
 
 .ingame-game-badge {
+  display: inline-block;
   background: linear-gradient(135deg, #ffd16d, #ffdb8a);
   color: #000;
   padding: 4px 10px;
@@ -914,6 +907,7 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   box-shadow: 0 2px 8px rgba(255, 209, 109, 0.4);
+  margin-bottom: 8px;
 }
 
 .ingame-card-content {
@@ -995,8 +989,8 @@
 
 .limiteds-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
   max-width: 1400px;
 }
 
@@ -1057,18 +1051,19 @@
 .limited-card-image {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 140px;
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 1));
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 8px;
 }
 
 .limited-card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   filter: brightness(0.95);
 }
@@ -1237,15 +1232,33 @@
   }
 
   .packages-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
 
   .ingame-products-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
 
   .limiteds-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .package-card {
+    min-height: 200px;
+    padding: 14px;
+  }
+  
+  .package-icon {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .ingame-card-image,
+  .limited-card-image {
+    height: 130px;
   }
 }
 
@@ -1278,6 +1291,37 @@
 
   .trust-badges {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .package-card {
+    min-height: 180px;
+    padding: 12px;
+  }
+  
+  .package-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .package-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .ingame-products-grid,
+  .limiteds-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .ingame-card-image,
+  .limited-card-image {
+    height: 120px;
+    padding: 6px;
   }
 
   /* Paquetes de Robux en horizontal para móviles */

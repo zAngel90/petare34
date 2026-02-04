@@ -64,22 +64,43 @@ router.get('/recent', async (req, res) => {
     const db = getDB('orders');
     await db.read();
     
-    // Solo órdenes completadas
+    // Solo órdenes completadas con robloxUserId
     let orders = (db.data.orders || [])
-      .filter(o => o.status === 'completed')
+      .filter(o => o.status === 'completed' && o.robloxUserId)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, parseInt(limit));
     
-    // Anonimizar datos de usuario para privacidad
+    // Obtener avatares de la API de Roblox
+    const userIds = orders.map(o => o.robloxUserId).filter(Boolean).join(',');
+    let avatars = {};
+    
+    if (userIds) {
+      try {
+        const avatarResponse = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userIds}&size=48x48&format=Png&isCircular=false`);
+        const avatarData = await avatarResponse.json();
+        
+        if (avatarData.data) {
+          avatarData.data.forEach(item => {
+            avatars[item.targetId] = item.imageUrl;
+          });
+        }
+      } catch (err) {
+        console.error('Error obteniendo avatares de Roblox:', err);
+      }
+    }
+    
+    // Formatear con avatar de Roblox y nombre entrecortado
     const anonymizedOrders = orders.map(order => {
-      const username = order.robloxUsername || order.userEmail?.split('@')[0] || 'Usuario';
-      const anonymized = username.substring(0, 2) + '***';
+      const username = order.robloxUsername || 'Usuario';
+      const maskedName = username.length > 3 
+        ? username.substring(0, 2) + '***' + username.substring(username.length - 1)
+        : username.substring(0, 1) + '***';
       
       return {
-        user: anonymized,
+        user: maskedName,
         amount: order.amount,
         time: formatTimeAgo(order.createdAt),
-        productType: order.productType
+        avatar: avatars[order.robloxUserId] || null
       };
     });
     

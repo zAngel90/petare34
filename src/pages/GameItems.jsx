@@ -20,7 +20,7 @@ const GameItems = () => {
   const [viewMode, setViewMode] = useState('games'); // 'games' o 'limiteds'
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all'); // Predeterminado: mostrar todas las categorías
   const [selectedRarity, setSelectedRarity] = useState('all');
   const [sortBy, setSortBy] = useState('popularity'); // popularity, price-asc, price-desc, name-asc, name-desc
   const [showRarityMenu, setShowRarityMenu] = useState(false);
@@ -128,6 +128,16 @@ const GameItems = () => {
   const convertPrice = (price) => {
     if (!price) return 0;
     return parseFloat(price).toFixed(2);
+  };
+
+  // Función para formatear precio con 2 decimales siempre
+  const formatPriceWithDecimals = (price) => {
+    const numPrice = parseFloat(price);
+    if (isNaN(numPrice)) return '0.00';
+    return numPrice.toLocaleString('es-PE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
   };
 
   const loadGameItems = async (slug) => {
@@ -372,7 +382,7 @@ const GameItems = () => {
         {/* Controles */}
         <div className="game-controls">
           <div className="search-bar-game">
-            <Search size={20} />
+            <Search size={14} />
             <input
               type="text"
               placeholder="Buscar ítems..."
@@ -519,7 +529,7 @@ const GameItems = () => {
                 <span className="item-price">
                   {currentCurrency ? (
                     <>
-                      {currentCurrency.symbol}{parseFloat(convertPrice(item.priceUSD)).toLocaleString()} <span className="currency">{currentCurrency.code}</span>
+                      {currentCurrency.symbol}{formatPriceWithDecimals(convertPrice(item.priceUSD))} <span className="currency">{currentCurrency.code}</span>
                     </>
                   ) : (
                     `$${item.priceUSD}`
@@ -603,7 +613,7 @@ const GameItems = () => {
                       <span className="cart-item-price">
                         {currentCurrency ? (
                           <>
-                            {currentCurrency.symbol}{parseFloat(convertPrice(item.priceUSD * item.quantity)).toLocaleString()} {currentCurrency.code}
+                            {currentCurrency.symbol}{formatPriceWithDecimals(convertPrice(item.priceUSD * item.quantity))} {currentCurrency.code}
                           </>
                         ) : (
                           `$${(item.priceUSD * item.quantity).toFixed(2)}`
@@ -648,7 +658,7 @@ const GameItems = () => {
                   <span className="total-label">Total</span>
                   <span className="total-amount">
                     {currentCurrency ? (
-                      <>{currentCurrency.symbol}{parseFloat(totalPriceConverted).toLocaleString()} {currentCurrency.code}</>
+                      <>{currentCurrency.symbol}{formatPriceWithDecimals(totalPriceConverted)} {currentCurrency.code}</>
                     ) : (
                       `$${totalPrice.toFixed(2)}`
                     )}
@@ -776,7 +786,7 @@ const GameItems = () => {
                   <span className="price-amount">
                     {currentCurrency ? (
                       <>
-                        {currentCurrency.symbol}{parseFloat(convertPrice(selectedProduct.priceUSD)).toLocaleString()} <span className="price-currency">{currentCurrency.code}</span>
+                        {currentCurrency.symbol}{formatPriceWithDecimals(convertPrice(selectedProduct.priceUSD))} <span className="price-currency">{currentCurrency.code}</span>
                       </>
                     ) : (
                       `$${selectedProduct.priceUSD}`

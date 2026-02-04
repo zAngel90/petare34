@@ -6,6 +6,8 @@ import './ReviewCard.css';
 const ReviewCard = ({ review, onHelpful }) => {
   const [hasVoted, setHasVoted] = useState(false);
   const [showAllImages, setShowAllImages] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleHelpful = () => {
     if (!hasVoted) {
@@ -102,7 +104,10 @@ const ReviewCard = ({ review, onHelpful }) => {
                     src={imageUrl} 
                     alt={`Review image ${index + 1}`}
                     className="review-image"
-                    onClick={() => window.open(imageUrl, '_blank')}
+                    onClick={() => {
+                      setSelectedImage(imageUrl);
+                      setShowImageModal(true);
+                    }}
                   />
                 </div>
               );
@@ -146,6 +151,24 @@ const ReviewCard = ({ review, onHelpful }) => {
           </span>
         )}
       </div>
+
+      {/* Modal de Imagen */}
+      {showImageModal && (
+        <div 
+          className="image-modal-overlay" 
+          onClick={() => setShowImageModal(false)}
+        >
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="image-modal-close"
+              onClick={() => setShowImageModal(false)}
+            >
+              ✕
+            </button>
+            <img src={selectedImage} alt="Review full size" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

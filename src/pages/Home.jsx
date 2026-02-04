@@ -425,11 +425,9 @@ const Home = () => {
                       <img src="/robux-logo.svg" alt="Robux" style={{ width: '60px', opacity: 0.3 }} />
                     </div>
                   )}
-                  <div className="ingame-card-overlay">
-                    <span className="ingame-game-badge">{product.game || 'Roblox'}</span>
-                  </div>
                 </div>
                 <div className="ingame-card-content">
+                  <span className="ingame-game-badge">{product.game || 'Roblox'}</span>
                   <h3 className="ingame-card-title">{product.itemName}</h3>
                   <p className="ingame-card-description">{product.description || 'Producto premium del juego'}</p>
                   <div className="ingame-card-footer">

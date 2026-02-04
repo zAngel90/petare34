@@ -61,14 +61,23 @@ router.get('/', async (req, res) => {
       if (review.orderId) {
         const order = orders.find(o => o.id === review.orderId);
         if (order) {
+          console.log(`📦 Enriching review ${review.id} with order ${order.id}:`, {
+            productName: order.productDetails?.productName,
+            packageName: order.productDetails?.packageName,
+            itemName: order.productDetails?.itemName,
+            productType: order.productType
+          });
           return {
             ...review,
             orderDetails: {
-              productName: order.productDetails?.itemName || null,
+              // Prioridad: productName > itemName > packageName
+              productName: order.productDetails?.productName || order.productDetails?.itemName || null,
               packageName: order.productDetails?.packageName || null,
               productType: order.productType
             }
           };
+        } else {
+          console.log(`⚠️ Order ${review.orderId} not found for review ${review.id}`);
         }
       }
       return review;

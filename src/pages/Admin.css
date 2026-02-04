@@ -217,6 +217,8 @@
   font-weight: 800;
   color: #fff;
   margin: 0;
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .stat-card-change {
@@ -398,6 +400,8 @@
   font-size: 2rem;
   font-weight: 900;
   margin-bottom: 4px;
+  word-break: break-word;
+  line-height: 1.2;
 }
 
 .revenue-count {
@@ -665,7 +669,8 @@
   }
 
   .revenue-amount {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    overflow-wrap: break-word;
   }
 
   .revenue-card-icon {
@@ -720,6 +725,7 @@
 
   .stat-card-value {
     font-size: 1.3rem;
+    overflow-wrap: break-word;
   }
 
   .stat-card-label {
@@ -729,5 +735,10 @@
   .stat-card-icon {
     width: 36px;
     height: 36px;
+  }
+  
+  .revenue-amount {
+    font-size: 1.5rem;
+    overflow-wrap: break-word;
   }
 }

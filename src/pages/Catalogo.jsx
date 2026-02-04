@@ -79,8 +79,8 @@ const Catalogo = () => {
         <div className="banner-cta-section">
           <div className="banner-price">
             <span className="price-label">Paquetes desde</span>
-            <span className="price-amount">400</span>
-            <span className="price-detail">hasta 10,000 Robux</span>
+            <span className="price-amount">30</span>
+            <span className="price-detail">hasta 30,000+ Robux</span>
           </div>
           <Link to="/robux" className="banner-btn">
             COMPRAR ROBUX

@@ -114,7 +114,7 @@ const RobloxUserSearch = ({ onUserSelect, selectedUser }) => {
           <>
             <form onSubmit={handleSearch} className="search-form">
               <div className="input-wrapper">
-                <Search size={20} className="search-icon" />
+                <Search size={14} className="search-icon" />
                 <input
                   type="text"
                   placeholder="Escribe tu usuario de Roblox..."

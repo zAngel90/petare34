@@ -252,8 +252,8 @@ const Header = () => {
                 Reseñas
               </Link>
               <Link 
-                to="/contacto" 
-                className={`nav-link ${location.pathname === '/contacto' ? 'highlighted' : ''}`}
+                to="/contact" 
+                className={`nav-link ${location.pathname === '/contact' ? 'highlighted' : ''}`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contacto

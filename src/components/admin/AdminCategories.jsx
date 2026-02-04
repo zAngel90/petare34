@@ -179,6 +179,50 @@ const AdminCategories = () => {
     }
   };
 
+  const handleMoveUp = async (category) => {
+    const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+    const index = sortedCategories.findIndex(c => c.id === category.id);
+    if (index === 0) return;
+    const prevCategory = sortedCategories[index - 1];
+    try {
+      await fetch(`${API_CONFIG.BASE_URL}/categories/${category.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: prevCategory.order })
+      });
+      await fetch(`${API_CONFIG.BASE_URL}/categories/${prevCategory.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: category.order })
+      });
+      fetchCategories();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleMoveDown = async (category) => {
+    const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+    const index = sortedCategories.findIndex(c => c.id === category.id);
+    if (index === sortedCategories.length - 1) return;
+    const nextCategory = sortedCategories[index + 1];
+    try {
+      await fetch(`${API_CONFIG.BASE_URL}/categories/${category.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: nextCategory.order })
+      });
+      await fetch(`${API_CONFIG.BASE_URL}/categories/${nextCategory.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: category.order })
+      });
+      fetchCategories();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const handleToggleActive = async (category) => {
     try {
       const response = await fetch(
@@ -254,6 +298,20 @@ const AdminCategories = () => {
                 title={category.active ? 'Desactivar' : 'Activar'}
               >
                 {category.active ? <X size={18} /> : <Check size={18} />}
+              </button>
+              <button
+                className="category-action-btn order"
+                onClick={() => handleMoveUp(category)}
+                title="Subir"
+              >
+                <ChevronUp size={18} />
+              </button>
+              <button
+                className="category-action-btn order"
+                onClick={() => handleMoveDown(category)}
+                title="Bajar"
+              >
+                <ChevronDown size={18} />
               </button>
               <button
                 className="category-action-btn edit"

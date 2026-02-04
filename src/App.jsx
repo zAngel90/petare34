@@ -19,6 +19,11 @@ import Settings from './pages/Settings';
 import Reviews from './pages/Reviews';
 import Admin from './pages/Admin';
 import AdminLogin from './pages/AdminLogin';
+import About from './pages/About';
+import FAQ from './pages/FAQ';
+import Contact from './pages/Contact';
+import Help from './pages/Help';
+import Status from './pages/Status';
 import './App.css';
 
 // Scroll to top on route change
@@ -62,6 +67,11 @@ function App() {
                   <Route path="/orders" element={<MyOrders />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/reviews" element={<Reviews />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/status" element={<Status />} />
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route 
                     path="/admin" 

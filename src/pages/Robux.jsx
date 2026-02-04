@@ -182,20 +182,12 @@ const Robux = () => {
       return `$${numPrice.toFixed(2)}`;
     }
 
-    // Formatear con los decimales configurados
-    const decimals = currency.decimals || 2;
-    const formatted = numPrice.toFixed(decimals);
-    
-    // Separar en parte entera y decimal
-    const [integer, decimal] = formatted.split('.');
-    
-    // Agregar separador de miles según la configuración
-    const separator = currency.thousandsSeparator || ',';
-    const integerWithSeparator = integer.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
-    
-    // Construir precio final
-    const decimalSeparator = currency.decimalSeparator || '.';
-    const priceFormatted = decimal ? `${integerWithSeparator}${decimalSeparator}${decimal}` : integerWithSeparator;
+    // Formatear con los decimales configurados (siempre 2 decimales)
+    const decimals = 2;
+    const priceFormatted = numPrice.toLocaleString('es-PE', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
     
     return `${currency.symbol}${priceFormatted}`;
   };
@@ -206,20 +198,37 @@ const Robux = () => {
   ];
 
 
-  // Calcular precio basado en el paquete seleccionado
-  // Los precios YA están en PEN en la DB, no convertir
-  const discount = selectedPackage ? selectedPackage.discount || 0 : 0;
-  const basePriceWithDiscount = selectedPackage ? selectedPackage.price : 0;
-  
-  // Si hay descuento, el precio en la DB ya tiene el descuento aplicado
-  // Necesitamos calcular el precio original
-  const originalPriceBeforeDiscount = discount > 0 
-    ? basePriceWithDiscount / (1 - discount / 100) 
-    : basePriceWithDiscount;
-  
-  const priceBeforeDiscount = originalPriceBeforeDiscount;
-  const totalPrice = basePriceWithDiscount;
-  const savedAmount = priceBeforeDiscount - totalPrice;
+  // Calcular precio basado en el paquete seleccionado o monto personalizado
+  let discount = 0;
+  let basePriceWithDiscount = 0;
+  let priceBeforeDiscount = 0;
+  let totalPrice = 0;
+  let savedAmount = 0;
+
+  if (selectedPackage) {
+    // Paquete predefinido
+    discount = selectedPackage.discount || 0;
+    basePriceWithDiscount = selectedPackage.price;
+    
+    // Si hay descuento, calcular precio original
+    const originalPriceBeforeDiscount = discount > 0 
+      ? basePriceWithDiscount / (1 - discount / 100) 
+      : basePriceWithDiscount;
+    
+    priceBeforeDiscount = originalPriceBeforeDiscount;
+    totalPrice = basePriceWithDiscount;
+    savedAmount = priceBeforeDiscount - totalPrice;
+  } else if (customAmount && !isNaN(customAmount) && parseInt(customAmount) > 0) {
+    // Monto personalizado - calcular precio según tasa FIJA de Robux
+    // Tasa: 1 Robux = 0.03 PEN (3 centavos de sol)
+    const ROBUX_RATE_PEN = 0.03;
+    
+    // Precio = cantidad de Robux * tasa de Robux
+    totalPrice = parseInt(customAmount) * ROBUX_RATE_PEN;
+    priceBeforeDiscount = totalPrice;
+    discount = 0;
+    savedAmount = 0;
+  }
 
   return (
     <div className="robux-purchase-page">
@@ -294,6 +303,7 @@ const Robux = () => {
                     <input
                       type="number"
                       placeholder="Ingresa cantidad..."
+                      min={selectedMethod === 'gamepass' ? 2500 : 30}
                       value={customAmount}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -336,6 +346,18 @@ const Robux = () => {
                     {method.discount && <span className="discount-badge">{method.discount}</span>}
                   </button>
                 ))}
+              </div>
+              <div className="method-info">
+                {selectedMethod === 'gamepass' && (
+                  <p className="method-note">
+                    💡 Monto mínimo: <strong>2,500 Robux</strong> | Puedes personalizar tu paquete
+                  </p>
+                )}
+                {selectedMethod === 'grupo' && (
+                  <p className="method-note">
+                    💡 Monto mínimo: <strong>30 Robux</strong> | Puedes personalizar tu paquete
+                  </p>
+                )}
               </div>
             </div>
 
@@ -508,7 +530,9 @@ const Robux = () => {
                 disabled={
                   !selectedUser || 
                   (selectedMethod === 'gamepass' && !selectedGamePass) ||
-                  (selectedMethod === 'grupo' && (!communityVerification || !communityVerification.isRegistered))
+                  (selectedMethod === 'grupo' && (!communityVerification || !communityVerification.isRegistered)) ||
+                  (selectedMethod === 'gamepass' && selectedAmount < 2500) ||
+                  (selectedMethod === 'grupo' && selectedAmount < 30)
                 }
                 onClick={() => setShowCheckout(true)}
               >
@@ -519,6 +543,18 @@ const Robux = () => {
               {selectedMethod === 'grupo' && selectedUser && (!communityVerification || !communityVerification.isRegistered) && (
                 <div className="buy-disabled-message">
                   ⚠️ Debes unirte a las 10 comunidades y registrarte para poder comprar
+                </div>
+              )}
+              
+              {selectedMethod === 'gamepass' && selectedAmount < 2500 && (
+                <div className="buy-disabled-message">
+                  ⚠️ El monto mínimo para Gamepass es 2,500 Robux
+                </div>
+              )}
+              
+              {selectedMethod === 'grupo' && selectedAmount < 30 && (
+                <div className="buy-disabled-message">
+                  ⚠️ El monto mínimo para Grupo es 30 Robux
                 </div>
               )}
 
@@ -551,7 +587,13 @@ const Robux = () => {
                   recentPurchases.map((purchase, index) => (
                     <div key={index} className="purchase-item">
                       <div className="purchase-user">
-                        <div className="user-avatar"></div>
+                        <div className="user-avatar">
+                          {purchase.avatar ? (
+                            <img src={purchase.avatar} alt={purchase.user} />
+                          ) : (
+                            <div className="avatar-placeholder">👤</div>
+                          )}
+                        </div>
                         <div>
                           <div className="user-name">{purchase.user}</div>
                           <div className="user-time">{purchase.time}</div>

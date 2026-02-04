@@ -168,6 +168,16 @@ const AdminStats = () => {
     );
   }
 
+  // Función para formatear precios con separadores de miles
+  const formatRevenue = (amount) => {
+    if (!amount && amount !== 0) return '0.00';
+    const num = parseFloat(amount);
+    return num.toLocaleString('es-PE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+
   const statCards = [
     {
       label: 'Esperando Verificación',
@@ -199,14 +209,14 @@ const AdminStats = () => {
     },
     {
       label: 'Revenue Total',
-      value: `S/${stats?.totalRevenue?.toFixed(2) || '0.00'}`,
+      value: `S/${formatRevenue(stats?.totalRevenue)}`,
       icon: DollarSign,
       color: '#ffd16d',
       change: null
     },
     {
       label: 'Revenue Pendiente',
-      value: `S/${stats?.pendingRevenue?.toFixed(2) || '0.00'}`,
+      value: `S/${formatRevenue(stats?.pendingRevenue)}`,
       icon: TrendingUp,
       color: '#ff9500',
       change: null
@@ -305,7 +315,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Robux</h3>
-                <div className="revenue-amount">S/{revenueByCategory.robux.toFixed(2)}</div>
+                <div className="revenue-amount">S/{formatRevenue(revenueByCategory.robux)}</div>
                 <div className="revenue-count">{revenueByCategory.count.robux} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -322,7 +332,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>In-Game Items</h3>
-                <div className="revenue-amount">S/{revenueByCategory.ingame.toFixed(2)}</div>
+                <div className="revenue-amount">S/{formatRevenue(revenueByCategory.ingame)}</div>
                 <div className="revenue-count">{revenueByCategory.count.ingame} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -339,7 +349,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Limiteds</h3>
-                <div className="revenue-amount">S/{revenueByCategory.limiteds.toFixed(2)}</div>
+                <div className="revenue-amount">S/{formatRevenue(revenueByCategory.limiteds)}</div>
                 <div className="revenue-count">{revenueByCategory.count.limiteds} órdenes</div>
                 <div className="revenue-percentage">
                   {revenueByCategory.total > 0 
@@ -356,7 +366,7 @@ const AdminStats = () => {
               </div>
               <div className="revenue-card-content">
                 <h3>Total Revenue</h3>
-                <div className="revenue-amount">S/{revenueByCategory.total.toFixed(2)}</div>
+                <div className="revenue-amount">S/{formatRevenue(revenueByCategory.total)}</div>
                 <div className="revenue-count">{revenueByCategory.count.total} órdenes</div>
                 <div className="revenue-percentage">100% del período</div>
               </div>

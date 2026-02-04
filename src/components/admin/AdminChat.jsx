@@ -337,18 +337,6 @@ const AdminChat = () => {
                     <p className="user-email">{selectedConversation.userEmail}</p>
                   </div>
                 </div>
-
-                <div className="conversation-actions">
-                  <select
-                    value={selectedConversation.status}
-                    onChange={(e) => handleStatusChange(selectedConversation.id, e.target.value)}
-                    className="status-select"
-                  >
-                    <option value="open">Abierta</option>
-                    <option value="resolved">Resuelta</option>
-                    <option value="closed">Cerrada</option>
-                  </select>
-                </div>
               </div>
 
               {/* Mensajes */}
