@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../context/AdminAuthContext';
+import { API_CONFIG } from '../config/api';
 import { Shield, Lock, User } from 'lucide-react';
 import './AdminLogin.css';
 
