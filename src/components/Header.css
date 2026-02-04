@@ -526,8 +526,8 @@
 
   .search-form {
     width: 100%;
-    order: 5;
-    margin-top: 12px;
+    order: -1;
+    margin-top: 0;
   }
 
   .search-input {
