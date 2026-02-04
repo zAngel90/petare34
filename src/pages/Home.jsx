@@ -160,7 +160,7 @@ const Home = () => {
                     {slide.type === 'custom' ? (
                       <>
                         <img 
-                          src={slide.image} 
+                          src={slide.image}
                           alt="Slide" 
                           style={{
                             width: '100%',
@@ -172,18 +172,24 @@ const Home = () => {
                         <div className="hover-overlay"></div>
                       </>
                     ) : (
-                      <div style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundImage: `url(${slide.image})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '60px',
-                        position: 'relative'
-                      }}>
-                        <div className="hero-content" style={{
+                      (() => {
+                        const imageUrl = slide.image?.startsWith('http') ? slide.image : `${API_CONFIG.SERVER_URL}${slide.image}`;
+                        console.log('🖼️ Corporate slide image URL:', imageUrl);
+                        console.log('🖼️ Original slide.image:', slide.image);
+                        console.log('🖼️ SERVER_URL:', API_CONFIG.SERVER_URL);
+                        return (
+                          <div style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundImage: `url("${imageUrl}")`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '60px',
+                            position: 'relative'
+                          }}>
+                            <div className="hero-content" style={{
                           background: 'rgba(0, 0, 0, 0.85)',
                           backdropFilter: 'blur(12px)',
                           WebkitBackdropFilter: 'blur(12px)',
@@ -208,8 +214,10 @@ const Home = () => {
                               </Link>
                             ))}
                           </div>
-                        </div>
-                      </div>
+                            </div>
+                          </div>
+                        );
+                      })()
                     )}
                   </div>
                 ))}
