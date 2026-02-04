@@ -23,9 +23,9 @@ const BASE_URL = 'https://api.rbxlatamstore.com/api';
 // Función helper (NO MODIFICAR)
 const getBaseURL = () => BASE_URL;
 
-// Variables de entorno (para logs)
-const isDevelopment = import.meta.env.DEV || process.env.NODE_ENV === 'development';
-const isProduction = import.meta.env.PROD || process.env.NODE_ENV === 'production';
+// Variables de entorno (para logs) - Solo usar import.meta.env en Vite
+const isDevelopment = import.meta.env.DEV;
+const isProduction = import.meta.env.PROD;
 
 /**
  * Configuración principal de API
