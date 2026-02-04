@@ -27,7 +27,7 @@ const Reviews = () => {
       });
 
       if (filter !== 'all') {
-        params.append('minRating', filter);
+        params.append('rating', filter); // Filtrar por rating exacto, no mínimo
       }
 
       const response = await fetch(`${API_CONFIG.BASE_URL}/reviews?${params}`);

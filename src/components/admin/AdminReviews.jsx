@@ -407,6 +407,24 @@ const AdminReviews = () => {
                   {renderStars(selectedReview.rating)}
                   <span className="rating-number">{selectedReview.rating}/5</span>
                 </div>
+                {selectedReview.orderId && (
+                  <div className="review-order-badge" style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 16px',
+                    background: 'rgba(0, 208, 132, 0.15)',
+                    color: '#00d084',
+                    borderRadius: '8px',
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    border: '1px solid rgba(0, 208, 132, 0.3)',
+                    marginBottom: '16px'
+                  }}>
+                    <CheckCircle size={18} />
+                    Pedido #{selectedReview.orderId} (Reseña Verificada)
+                  </div>
+                )}
                 {selectedReview.title && <h3 className="review-title-large">{selectedReview.title}</h3>}
                 <p className="review-comment-large">{selectedReview.comment}</p>
               </div>
