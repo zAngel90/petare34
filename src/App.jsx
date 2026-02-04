@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
@@ -20,6 +21,17 @@ import Admin from './pages/Admin';
 import AdminLogin from './pages/AdminLogin';
 import './App.css';
 
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 // Layout component without sidebar
 const Layout = ({ children }) => {
   return (
@@ -35,6 +47,7 @@ function App() {
       <CartProvider>
         <AdminAuthProvider>
           <Router>
+            <ScrollToTop />
             <div className="app">
               <Header />
               <Layout>
