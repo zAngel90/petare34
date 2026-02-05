@@ -23,6 +23,7 @@ const Robux = () => {
   const [recentPurchasesOpacity, setRecentPurchasesOpacity] = useState(1);
   const [currencies, setCurrencies] = useState([]);
   const [exchangeRates, setExchangeRates] = useState({});
+  const [robuxRate, setRobuxRate] = useState(0.03); // Tasa dinámica desde backend
   const [showCheckout, setShowCheckout] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -72,6 +73,17 @@ const Robux = () => {
           });
           console.log('📊 Mapa de tasas:', ratesMap);
           setExchangeRates(ratesMap);
+        }
+
+        // Fetch exchange rate para Robux
+        const exchangeRateResponse = await fetch(`${API_CONFIG.BASE_URL}/exchange-rates/current`);
+        const exchangeRateData = await exchangeRateResponse.json();
+        console.log('💱 Exchange rate data:', exchangeRateData);
+        if (exchangeRateData.success && exchangeRateData.data.rate) {
+          console.log('✅ Tasa de cambio cargada:', exchangeRateData.data.rate);
+          setRobuxRate(exchangeRateData.data.rate);
+        } else {
+          console.log('⚠️ Usando tasa por defecto: 0.03');
         }
 
         // Fetch gamepass help configuration
@@ -219,12 +231,11 @@ const Robux = () => {
     totalPrice = basePriceWithDiscount;
     savedAmount = priceBeforeDiscount - totalPrice;
   } else if (customAmount && !isNaN(customAmount) && parseInt(customAmount) > 0) {
-    // Monto personalizado - calcular precio según tasa FIJA de Robux
-    // Tasa: 1 Robux = 0.03 PEN (3 centavos de sol)
-    const ROBUX_RATE_PEN = 0.03;
+    // Monto personalizado - calcular precio según tasa DINÁMICA de Robux desde backend
+    // La tasa se carga desde /exchange-rates/current
     
     // Precio = cantidad de Robux * tasa de Robux
-    totalPrice = parseInt(customAmount) * ROBUX_RATE_PEN;
+    totalPrice = parseInt(customAmount) * robuxRate;
     priceBeforeDiscount = totalPrice;
     discount = 0;
     savedAmount = 0;

@@ -75,9 +75,9 @@ const AdminExchangeRates = () => {
     }
   };
 
-  const calculateRobux = (usd) => {
+  const calculateRobux = (pen) => {
     if (!exchangeRate) return 0;
-    return Math.floor(usd / exchangeRate.rate);
+    return Math.floor(pen / exchangeRate.rate);
   };
 
   if (loading) {
@@ -109,8 +109,8 @@ const AdminExchangeRates = () => {
             <h3>Tasa Actual</h3>
           </div>
           <div className="rate-display">
-            <span className="rate-label">$1 USD =</span>
-            <span className="rate-value">{calculateRobux(1)} Robux</span>
+            <span className="rate-label">1 Robux =</span>
+            <span className="rate-value">S/{exchangeRate.rate} PEN</span>
           </div>
           <div className="rate-meta">
             <p>Última actualización:</p>
@@ -130,17 +130,17 @@ const AdminExchangeRates = () => {
 
           <div className="rate-editor">
             <div className="rate-input-group">
-              <label>Precio por Robux (USD)</label>
+              <label>Precio por Robux (PEN - Soles)</label>
               <input
                 type="number"
                 step="0.001"
                 min="0"
                 value={newRate}
                 onChange={(e) => setNewRate(e.target.value)}
-                placeholder="0.01"
+                placeholder="0.03"
               />
               <span className="input-hint">
-                Ejemplo: 0.01 = $1 compra 100 Robux
+                Ejemplo: 0.03 = 1 Robux cuesta S/0.03 PEN
               </span>
             </div>
 
@@ -199,31 +199,31 @@ const AdminExchangeRates = () => {
           <div className="examples-list">
             <button
               className="example-btn"
-              onClick={() => setNewRate('0.01')}
+              onClick={() => setNewRate('0.03')}
             >
-              <span>0.01</span>
-              <span>$1 = 100 Robux</span>
+              <span>0.03</span>
+              <span>1 Robux = S/0.03</span>
             </button>
             <button
               className="example-btn"
-              onClick={() => setNewRate('0.008')}
+              onClick={() => setNewRate('0.025')}
             >
-              <span>0.008</span>
-              <span>$1 = 125 Robux</span>
+              <span>0.025</span>
+              <span>1 Robux = S/0.025</span>
             </button>
             <button
               className="example-btn"
-              onClick={() => setNewRate('0.0067')}
+              onClick={() => setNewRate('0.035')}
             >
-              <span>0.0067</span>
-              <span>$1 = 150 Robux</span>
+              <span>0.035</span>
+              <span>1 Robux = S/0.035</span>
             </button>
             <button
               className="example-btn"
-              onClick={() => setNewRate('0.005')}
+              onClick={() => setNewRate('0.04')}
             >
-              <span>0.005</span>
-              <span>$1 = 200 Robux</span>
+              <span>0.04</span>
+              <span>1 Robux = S/0.04</span>
             </button>
           </div>
         </div>

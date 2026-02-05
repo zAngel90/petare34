@@ -12,7 +12,8 @@ router.get('/current', async (req, res) => {
 
     if (!db.data.exchangeRate) {
       db.data.exchangeRate = {
-        rate: 0.01, // $1 USD = 100 Robux (por defecto)
+        rate: 0.03, // S/0.03 PEN = 1 Robux (por defecto)
+        currency: 'PEN',
         lastUpdated: new Date().toISOString(),
         updatedBy: 'system'
       };
@@ -40,13 +41,14 @@ router.put('/current', requireAdmin, logAdminAction, async (req, res) => {
 
     db.data.exchangeRate = {
       rate: parseFloat(rate),
+      currency: 'PEN',
       lastUpdated: new Date().toISOString(),
       updatedBy: req.admin?.email || 'admin'
     };
 
     await db.write();
 
-    console.log(`✅ Tasa de cambio actualizada: $1 = ${(1/rate).toFixed(0)} Robux`);
+    console.log(`✅ Tasa de cambio actualizada: S/${rate} PEN = 1 Robux`);
 
     res.json({ success: true, data: db.data.exchangeRate });
   } catch (error) {
