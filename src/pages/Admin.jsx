@@ -63,7 +63,7 @@ const Admin = () => {
 
   const tabs = [
     { id: 'stats', label: 'Dashboard', icon: BarChart3 },
-    { id: 'orders', label: 'Órdenes', icon: ShoppingBag, badge: 'pending' },
+    { id: 'orders', label: 'Órdenes', icon: ShoppingBag },
     { id: 'reviews', label: 'Reseñas', icon: FileText },
     { id: 'homeconfig', label: 'Configuración Home', icon: Home },
     { id: 'gamepass-help', label: 'Ayuda Gamepass', icon: FileText },
