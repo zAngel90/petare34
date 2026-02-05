@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Image as ImageIcon, Check, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Image as ImageIcon, Check, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { API_CONFIG } from '../../config/api';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import './AdminCategories.css';
@@ -195,7 +195,7 @@ const AdminCategories = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order: category.order })
       });
-      fetchCategories();
+      loadCategories();
     } catch (error) {
       console.error('Error:', error);
     }
@@ -217,7 +217,7 @@ const AdminCategories = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order: category.order })
       });
-      fetchCategories();
+      loadCategories();
     } catch (error) {
       console.error('Error:', error);
     }
