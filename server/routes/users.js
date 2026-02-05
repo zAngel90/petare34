@@ -38,12 +38,29 @@ router.get('/', requireAdmin, logAdminAction, async (req, res) => {
     const db = getDB('users');
     await db.read();
     
+    const ordersDb = getDB('orders');
+    await ordersDb.read();
+    
     const users = db.data.users || [];
+    const orders = ordersDb.data.orders || [];
     
-    // No enviar passwords
-    const safeUsers = users.map(({ password, ...user }) => user);
+    // Calcular estadísticas de cada usuario
+    const usersWithStats = users.map(({ password, ...user }) => {
+      const userOrders = orders.filter(o => o.userId === user.id);
+      const completedOrders = userOrders.filter(o => o.status === 'completed');
+      
+      const totalSpent = completedOrders.reduce((sum, order) => {
+        return sum + (parseFloat(order.totalPrice) || 0);
+      }, 0);
+      
+      return {
+        ...user,
+        totalOrders: userOrders.length,
+        totalSpent: totalSpent
+      };
+    });
     
-    res.json({ success: true, data: safeUsers });
+    res.json({ success: true, data: usersWithStats });
   } catch (error) {
     console.error('Error obteniendo usuarios:', error);
     res.status(500).json({ success: false, error: 'Error al obtener usuarios' });

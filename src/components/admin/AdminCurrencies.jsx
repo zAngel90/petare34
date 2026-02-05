@@ -324,8 +324,8 @@ const AdminCurrencies = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="currency-modal-overlay" onClick={handleCloseModal}>
-          <div className="currency-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="currency-modal-overlay">
+          <div className="currency-modal">
             <div className="currency-modal-header">
               <h3>{editingCurrency ? 'Editar Moneda' : 'Nueva Moneda'}</h3>
               <button className="modal-close-btn" onClick={handleCloseModal}>×</button>

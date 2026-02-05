@@ -371,7 +371,7 @@ const AdminReviews = () => {
       {/* Review Detail Modal */}
       {selectedReview && (
         <div className="review-modal">
-          <div className="modal-overlay" onClick={() => setSelectedReview(null)} />
+          <div className="modal-overlay" />
           <div className="modal-content-review">
             <div className="modal-header-review">
               <h3>Detalles de la Reseña</h3>

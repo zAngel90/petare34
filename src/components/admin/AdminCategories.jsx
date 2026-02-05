@@ -342,8 +342,8 @@ const AdminCategories = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="category-modal-overlay" onClick={handleCloseModal}>
-          <div className="category-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="category-modal-overlay">
+          <div className="category-modal">
             <div className="category-modal-header">
               <h3>{editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}</h3>
               <button className="modal-close-btn" onClick={handleCloseModal}>×</button>

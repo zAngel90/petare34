@@ -405,8 +405,8 @@ const AdminPaymentMethods = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay">
+          <div className="modal-content">
             <div className="modal-header">
               <h3>{editingMethod ? 'Editar Método' : 'Crear Método'}</h3>
               <button className="modal-close" onClick={closeModal}>×</button>

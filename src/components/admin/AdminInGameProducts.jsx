@@ -371,8 +371,8 @@ const AdminInGameProducts = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="product-modal-overlay" onClick={handleCloseModal}>
-          <div className="product-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="product-modal-overlay">
+          <div className="product-modal">
             <div className="product-modal-header">
               <h3>{editingProduct ? 'Editar Producto' : 'Nuevo Producto'}</h3>
               <button className="modal-close-btn" onClick={handleCloseModal}>×</button>
