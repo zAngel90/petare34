@@ -152,9 +152,6 @@ const AdminUsers = () => {
                   {user.totalOrders !== undefined && (
                     <div className="user-stats">
                       <span>Órdenes: {user.totalOrders}</span>
-                      {user.totalSpent !== undefined && (
-                        <span>Gastado: ${user.totalSpent.toFixed(2)}</span>
-                      )}
                     </div>
                   )}
                 </div>
