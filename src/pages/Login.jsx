@@ -73,7 +73,7 @@ const Login = () => {
       
       if (data.success && data.token) {
         localStorage.setItem('user-token', data.token);
-        navigate('/');
+        window.location.href = '/'; // Recargar y ir al home
       } else {
         setError(data.error || 'Error al iniciar sesión con Discord');
       }
