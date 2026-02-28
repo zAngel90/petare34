@@ -385,6 +385,133 @@ router.get('/verify', async (req, res) => {
   }
 });
 
+// POST - Login/Register con Google
+router.post('/google-login', async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({
+        success: false,
+        error: 'Código de autorización es requerido'
+      });
+    }
+
+    // Intercambiar código por access token
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        code: code,
+        client_id: '1001764541241-vk0qafbpa5lcnrbjai805e964jfctpop.apps.googleusercontent.com',
+        client_secret: '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',
+        redirect_uri: 'https://rbxlatamstore.com/login',
+        grant_type: 'authorization_code'
+      })
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (!tokenData.access_token) {
+      console.error('Error obteniendo access token de Google:', tokenData);
+      return res.status(400).json({
+        success: false,
+        error: 'Error obteniendo token de Google'
+      });
+    }
+
+    // Obtener información del usuario de Google
+    const userResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`
+      }
+    });
+
+    const googleUser = await userResponse.json();
+
+    if (!googleUser.id) {
+      console.error('Error obteniendo usuario de Google:', googleUser);
+      return res.status(400).json({
+        success: false,
+        error: 'Error obteniendo datos de Google'
+      });
+    }
+
+    // Buscar o crear usuario en la base de datos
+    const db = getDB('users');
+    await db.read();
+
+    let user = db.data.users.find(u => u.googleId === googleUser.id);
+
+    if (!user) {
+      // Crear nuevo usuario
+      const newUser = {
+        id: dbHelpers.generateId(db.data.users),
+        email: googleUser.email,
+        password: null, // No tiene password porque usa Google
+        username: googleUser.name || googleUser.email.split('@')[0],
+        robloxUsername: '',
+        robloxUserId: null,
+        avatar: googleUser.picture || `https://api.dicebear.com/7.x/avataaars/svg?seed=${googleUser.id}`,
+        role: 'user',
+        active: true,
+        emailVerified: true, // Google ya verificó el email
+        googleId: googleUser.id, // ⭐ Guardar Google ID
+        balance: 0,
+        totalOrders: 0,
+        totalSpent: 0,
+        createdAt: new Date().toISOString()
+      };
+
+      db.data.users.push(newUser);
+      await db.write();
+      user = newUser;
+
+      console.log(`✅ Nuevo usuario registrado via Google: ${user.username}`);
+    } else {
+      // Actualizar avatar si cambió
+      if (googleUser.picture && user.avatar !== googleUser.picture) {
+        user.avatar = googleUser.picture;
+        await db.write();
+      }
+      console.log(`✅ Usuario existente login via Google: ${user.username}`);
+    }
+
+    // Generar token JWT
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        avatar: user.avatar,
+        robloxUsername: user.robloxUsername,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en Google login:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error al procesar login con Google'
+    });
+  }
+});
+
 // POST - Login/Register con Discord
 router.post('/discord-login', async (req, res) => {
   try {
