@@ -428,11 +428,11 @@ const Home = () => {
                 </div>
                 <div className="ingame-card-content">
                   <span className="ingame-game-badge">{product.game || 'Roblox'}</span>
-                  <h3 className="ingame-card-title">{product.itemName}</h3>
+                  <h3 className="ingame-card-title">{product.itemName?.replace(/-/g, ' ')}</h3>
                   {/* Mostrar itemType como badge */}
                   {product.itemType && (
                     <span className="classification-badge-text-home">
-                      {product.itemType}
+                      {product.itemType.replace(/-/g, ' ')}
                     </span>
                   )}
                   <div className="ingame-card-footer">
