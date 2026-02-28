@@ -248,7 +248,8 @@ export const getGamePassById = async (gamepassId) => {
       name: data.Name || data.name || data.displayName || 'Gamepass',
       displayName: data.DisplayName || data.displayName || data.Name || data.name || 'Gamepass',
       thumbnail: thumbnail || null,
-      price: data.PriceInRobux || data.priceInRobux || data.price || 0
+      price: data.PriceInRobux || data.priceInRobux || data.price || 0,
+      placeId: data.placeId || null
     };
 
     console.log('Gamepass procesado:', gamepassInfo);

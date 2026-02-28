@@ -1,0 +1,492 @@
+/* Importar estilos base de CheckoutItems */
+@import './CheckoutItems.css';
+
+/* Override para CheckoutRobux - más espacio superior */
+.checkout-robux-page {
+  padding-top: 120px !important;
+}
+
+/* Layout Horizontal en Desktop */
+@media (min-width: 769px) {
+  .checkout-robux-page .checkout-container {
+    max-width: 1100px;
+    padding: 20px;
+  }
+  
+  .checkout-robux-page .checkout-container h1 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .checkout-robux-page .checkout-container h1::after {
+    width: 50px;
+    height: 2px;
+  }
+  
+  /* Grid de 2 columnas: Formulario | Resumen */
+  .checkout-robux-horizontal {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 25px;
+    align-items: start;
+  }
+  
+  .checkout-robux-left {
+    /* Columna izquierda: pasos y formulario */
+  }
+  
+  .checkout-robux-right {
+    /* Columna derecha: resumen sticky */
+    position: sticky;
+    top: 100px;
+  }
+  
+  /* Steps más compactos */
+  .checkout-robux-page .checkout-steps {
+    padding: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .checkout-robux-page .step-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .checkout-robux-page .step-label {
+    font-size: 0.7rem;
+  }
+  
+  .checkout-robux-page .step-divider {
+    width: 50px;
+    margin: 0 12px;
+    margin-bottom: 25px;
+  }
+  
+  /* Resumen más compacto */
+  .checkout-robux-page .order-summary {
+    padding: 18px;
+    margin-bottom: 0;
+  }
+  
+  .checkout-robux-page .order-summary h2 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+  
+  .checkout-robux-page .robux-total-amount {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .checkout-robux-page .robux-amount {
+    font-size: 1.4rem;
+  }
+  
+  .checkout-robux-page .robux-label {
+    font-size: 0.75rem;
+  }
+  
+  .checkout-robux-page .order-total {
+    font-size: 1.1rem;
+    padding: 12px 10px 0;
+  }
+  
+  /* Step content más compacto */
+  .checkout-robux-page .step-content {
+    padding: 20px;
+    margin-top: 0;
+  }
+  
+  .checkout-robux-page .step-title {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .checkout-robux-page .step-description {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Formularios más compactos */
+  .checkout-robux-page .form-group {
+    margin-bottom: 18px;
+  }
+  
+  .checkout-robux-page .form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .checkout-robux-page .verification-section {
+    padding: 15px;
+  }
+  
+  .checkout-robux-page .section-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+  }
+  
+  .checkout-robux-page .verified-info-cards {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .checkout-robux-page .verified-user-info,
+  .checkout-robux-page .verified-gamepass-info {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+  
+  /* Botones más compactos */
+  .checkout-robux-page .step-actions {
+    margin-top: 25px;
+    gap: 10px;
+  }
+  
+  .checkout-robux-page .btn-next,
+  .checkout-robux-page .btn-confirm,
+  .checkout-robux-page .btn-back {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-robux-page {
+    padding-top: 110px !important;
+  }
+  
+  /* Ocultar simulación en móvil */
+  .checkout-simulation {
+    display: none;
+  }
+}
+
+/* Estilos específicos para Robux Summary */
+.robux-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.robux-total-amount {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 165, 0, 0.15) 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.robux-total-amount svg {
+  color: #FFD700;
+  filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.4));
+  width: 28px;
+  height: 28px;
+}
+
+.robux-amount {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFD700;
+  text-shadow: 0 3px 15px rgba(255, 215, 0, 0.5);
+  line-height: 1.2;
+}
+
+.robux-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Verified Info Cards */
+.verified-info-cards {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.verified-gamepass-info {
+  flex: 1;
+  min-width: 180px;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.12) 0%, rgba(76, 175, 80, 0.06) 100%);
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  border-radius: 8px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4CAF50;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);
+}
+
+.verified-info-cards .check-icon,
+.verified-info-cards svg,
+.verified-info-cards .verified-user-info svg,
+.verified-info-cards .verified-gamepass-info svg {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Force en desktop */
+@media (min-width: 769px) {
+  .verified-info-cards .check-icon,
+  .verified-info-cards svg,
+  .verified-info-cards .verified-user-info svg,
+  .verified-info-cards .verified-gamepass-info svg {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+  }
+}
+
+/* Section Subtitle */
+.section-subtitle {
+  color: #FFD700;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+  padding-bottom: 8px;
+}
+
+.verification-section {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+/* Checkout Simulation Animation */
+.checkout-simulation {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(26, 26, 26, 0.6) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.simulation-title {
+  color: #FFD700;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.simulation-screen {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  min-height: 180px;
+}
+
+.sim-step {
+  margin-bottom: 10px;
+}
+
+.sim-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7rem;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.sim-input {
+  height: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.sim-button {
+  width: 60px;
+  height: 20px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.sim-upload-box {
+  height: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.sim-confirm-btn {
+  display: inline-block;
+  padding: 6px 20px;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 6px;
+  color: #FFD700;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+/* Cursor animado */
+.animated-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  animation: cursorPath 8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes cursorPath {
+  0% {
+    top: 15px;
+    left: 15px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  /* Paso 1: Input usuario */
+  10% {
+    top: 38px;
+    left: 100px;
+  }
+  20% {
+    top: 38px;
+    left: 100px;
+  }
+  /* Paso 2: Método de pago */
+  30% {
+    top: 75px;
+    left: 80px;
+  }
+  40% {
+    top: 75px;
+    left: 80px;
+  }
+  /* Paso 3: Upload */
+  50% {
+    top: 115px;
+    left: 120px;
+  }
+  60% {
+    top: 115px;
+    left: 120px;
+  }
+  /* Paso 4: Confirmar */
+  70% {
+    top: 155px;
+    left: 60px;
+  }
+  85% {
+    top: 155px;
+    left: 60px;
+  }
+  95% {
+    top: 15px;
+    left: 15px;
+    opacity: 1;
+  }
+  100% {
+    top: 15px;
+    left: 15px;
+    opacity: 0;
+  }
+}
+
+/* Efectos de highlight cuando el cursor pasa */
+@keyframes highlight {
+  0%, 100% {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+}
+
+.sim-input {
+  animation: highlight 8s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
+.sim-button {
+  animation: highlight 8s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+
+.sim-upload-box {
+  animation: highlight 8s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+.sim-confirm-btn {
+  animation: highlight 8s ease-in-out infinite;
+  animation-delay: 5.6s;
+}
+
+/* Responsive para Robux */
+@media (max-width: 768px) {
+  .robux-total-amount {
+    padding: 15px 12px;
+    gap: 12px;
+  }
+
+  .robux-total-amount svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .robux-amount {
+    font-size: 1.3rem;
+  }
+
+  .robux-label {
+    font-size: 0.75rem;
+  }
+
+  .verified-info-cards {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .verified-gamepass-info {
+    font-size: 0.85rem;
+    padding: 10px 14px;
+  }
+
+  .verification-section {
+    padding: 15px 12px;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+}

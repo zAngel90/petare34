@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
+import { MessageCircle, X, Send, Minimize2, Paperclip, Image as ImageIcon, Video } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { io } from 'socket.io-client';
 import { API_CONFIG } from '../config/api';
@@ -13,12 +13,15 @@ const ChatWidget = () => {
   const [conversationId, setConversationId] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef(null);
+  const fileInputRef = useRef(null);
   const { user, isAuthenticated } = useAuth();
 
-  // Inicializar Socket.IO
+  // Inicializar Socket.IO (siempre conectado si está autenticado)
   useEffect(() => {
-    if (isAuthenticated && isOpen) {
+    if (isAuthenticated) {
       const newSocket = io(API_CONFIG.SOCKET_URL);
 
       newSocket.on('connect', () => {
@@ -33,14 +36,19 @@ const ChatWidget = () => {
       });
 
       newSocket.on('message:received', (data) => {
-        console.log('📨 Mensaje recibido:', data);
-        setMessages(prev => [...prev, {
-          id: Date.now(),
+        console.log('Mensaje recibido por socket:', data);
+        
+        const newMessage = {
+          id: data.id || Date.now(),
           message: data.message,
           senderName: data.senderName,
           senderType: data.senderType,
-          createdAt: data.timestamp
-        }]);
+          createdAt: data.createdAt || data.timestamp,
+          fileUrl: data.fileUrl || null,
+          fileType: data.fileType || null
+        };
+        
+        setMessages(prev => [...prev, newMessage]);
       });
 
       newSocket.on('typing:admin', () => {
@@ -58,7 +66,7 @@ const ChatWidget = () => {
         newSocket.close();
       };
     }
-  }, [isAuthenticated, isOpen, user]);
+  }, [isAuthenticated, user]);
 
   // Cargar conversación y mensajes
   useEffect(() => {
@@ -131,6 +139,78 @@ const ChatWidget = () => {
       });
     } catch (error) {
       console.error('Error marcando como leído:', error);
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    console.log('🔍 FileSelect triggered (Usuario)');
+    const file = e.target.files[0];
+    console.log('📎 Archivo seleccionado:', file);
+    
+    if (file) {
+      console.log('📏 Tamaño:', file.size, 'Tipo:', file.type);
+      
+      // Validar tamaño (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('El archivo es demasiado grande. Máximo 10MB');
+        return;
+      }
+
+      // Validar tipo
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
+      if (!validTypes.includes(file.type)) {
+        alert('Tipo de archivo no válido. Solo se permiten imágenes y videos.');
+        console.log('❌ Tipo no válido:', file.type);
+        return;
+      }
+
+      console.log('✅ Archivo válido, guardando en state...');
+      setSelectedFile(file);
+      console.log('✅ setSelectedFile ejecutado');
+    } else {
+      console.log('❌ No se seleccionó ningún archivo');
+    }
+  };
+
+  const handleSendFile = async () => {
+    if (!selectedFile || !conversationId) return;
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('sender', user.username);
+      formData.append('senderType', 'user');
+
+      const response = await fetch(`${API_CONFIG.BASE_URL}/chat/${conversationId}/upload`, {
+        method: 'POST',
+        // NO enviar headers cuando se usa FormData, el navegador lo maneja automáticamente
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Agregar mensaje con archivo
+        setMessages(prev => [...prev, data.data]);
+        setSelectedFile(null);
+        
+        // Emitir por socket
+        if (socket) {
+          socket.emit('message:send', {
+            conversationId,
+            ...data.data
+          });
+        }
+      } else {
+        alert('Error al enviar archivo: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error enviando archivo:', error);
+      alert('Error al enviar archivo');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -258,7 +338,39 @@ const ChatWidget = () => {
                   >
                     <div className="message-content">
                       <strong>{msg.senderType === 'admin' ? 'Soporte' : 'Tú'}</strong>
-                      <p>{msg.message}</p>
+                      
+                      {/* Mostrar archivo si existe */}
+                      {msg.fileUrl && (
+                        <div style={{ marginTop: '6px' }}>
+                          {msg.fileType === 'image' ? (
+                            <img 
+                              src={`${API_CONFIG.SERVER_URL}${msg.fileUrl}`} 
+                              alt="Imagen" 
+                              style={{
+                                maxWidth: '200px',
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                              }}
+                              onClick={() => window.open(`${API_CONFIG.SERVER_URL}${msg.fileUrl}`, '_blank')}
+                            />
+                          ) : (
+                            <video 
+                              src={`${API_CONFIG.SERVER_URL}${msg.fileUrl}`} 
+                              controls 
+                              style={{
+                                maxWidth: '250px',
+                                width: '100%',
+                                borderRadius: '8px'
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+                      
+                      {msg.message && <p>{msg.message}</p>}
                       <span className="message-time">
                         {new Date(msg.createdAt).toLocaleTimeString('es-ES', {
                           hour: '2-digit',
@@ -284,8 +396,97 @@ const ChatWidget = () => {
                 <div ref={messagesEndRef} />
               </div>
 
+              {/* Preview de archivo seleccionado */}
+              {selectedFile && (
+                <div 
+                  style={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    padding: '10px',
+                    margin: '0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  {/* Miniatura de la imagen */}
+                  {selectedFile.type.startsWith('image/') && (
+                    <img 
+                      src={URL.createObjectURL(selectedFile)} 
+                      alt="Preview" 
+                      style={{ 
+                        width: '50px',
+                        height: '50px',
+                        objectFit: 'cover',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(255, 255, 255, 0.2)'
+                      }} 
+                    />
+                  )}
+                  
+                  {/* Info */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ color: '#fff', fontSize: '12px', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {selectedFile.name}
+                    </div>
+                    <div style={{ color: '#888', fontSize: '11px' }}>
+                      {(selectedFile.size / 1024).toFixed(1)} KB
+                    </div>
+                  </div>
+                  
+                  {/* Botones */}
+                  <button 
+                    onClick={() => setSelectedFile(null)}
+                    type="button"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#999',
+                      cursor: 'pointer',
+                      padding: '4px'
+                    }}
+                  >
+                    <X size={16} />
+                  </button>
+                  
+                  <button 
+                    onClick={handleSendFile}
+                    disabled={uploading}
+                    type="button"
+                    style={{
+                      padding: '6px 12px',
+                      background: uploading ? '#555' : '#667eea',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      cursor: uploading ? 'not-allowed' : 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {uploading ? 'Enviando...' : 'Enviar'}
+                  </button>
+                </div>
+              )}
+
               {/* Input */}
               <form className="chat-widget-input" onSubmit={handleSendMessage}>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept="image/*,video/*"
+                  style={{ display: 'none' }}
+                />
+                <button 
+                  type="button"
+                  className="btn-attach"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Adjuntar archivo"
+                >
+                  <Paperclip size={18} />
+                </button>
                 <input
                   type="text"
                   placeholder="Escribe tu mensaje..."

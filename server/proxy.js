@@ -13,6 +13,7 @@ import { setupSocket } from './socket.js';
 // Import routes
 import authRouter from './routes/auth.js';
 import userAuthRouter from './routes/user-auth.js';
+import discordAuthRouter from './routes/discord-auth.js'; // Discord OAuth
 import chatRouter from './routes/chat.js';
 import productsRouter from './routes/products.js';
 import ordersRouter from './routes/orders.js';
@@ -25,6 +26,7 @@ import currenciesRouter from './routes/currencies.js';
 import homeConfigRouter from './routes/home-config.js';
 import reviewsRouter from './routes/reviews.js';
 import settingsRouter from './routes/settings.js';
+import orderChatRouter from './routes/order-chat.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -64,6 +66,30 @@ const upload = multer({
   }
 });
 
+// Configuración de multer para archivos de chat (imágenes y videos)
+const chatStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}${file.originalname}`;
+    cb(null, uniqueName);
+  }
+});
+
+const chatUpload = multer({
+  storage: chatStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max para chat
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten imágenes y videos'));
+    }
+  }
+});
+
 // Servir archivos estáticos de uploads
 app.use('/uploads', express.static(uploadsDir));
 
@@ -73,10 +99,19 @@ console.log('📦 Base de datos inicializada');
 
 // Inicializar Socket.IO
 const io = setupSocket(httpServer);
+app.set('io', io); // Guardar io para que las rutas puedan acceder
+console.log('🔌 Socket.IO disponible en app');
 
 // API Routes
 app.use('/api/auth', authRouter); // Admin auth
 app.use('/api/user-auth', userAuthRouter); // User auth (login/register)
+app.use('/auth', discordAuthRouter); // Discord OAuth (sin /api)
+
+// Ruta especial para upload de chat con multer
+app.post('/api/chat/:conversationId/upload', chatUpload.single('file'), (req, res, next) => {
+  next();
+});
+
 app.use('/api/chat', chatRouter); // Chat routes
 app.use('/api/products', productsRouter);
 app.use('/api/orders', ordersRouter);
@@ -89,6 +124,7 @@ app.use('/api/currencies', currenciesRouter); // Monedas
 app.use('/api/home-config', homeConfigRouter); // Configuración del Home
 app.use('/api/reviews', reviewsRouter); // Sistema de reseñas
 app.use('/api/settings', settingsRouter); // Configuración general
+app.use('/api/order-chat', orderChatRouter); // Chat por pedido
 
 // Upload endpoint para comprobantes
 app.post('/api/upload/payment-proof', upload.single('file'), (req, res) => {

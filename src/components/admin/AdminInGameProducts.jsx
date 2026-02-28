@@ -18,11 +18,14 @@ const AdminInGameProducts = () => {
     game: '',
     itemName: '',
     itemType: '',
+    categoryOrder: 999,
+    productOrder: 999,
     robuxAmount: '',
     price: '',
     description: '',
     image: '',
     rarity: '',
+    rarityColor: '#ff6b6b',
     isLimited: false,
     active: true
   });
@@ -89,11 +92,14 @@ const AdminInGameProducts = () => {
         game: product.game,
         itemName: product.itemName,
         itemType: product.itemType || '',
+        categoryOrder: product.categoryOrder !== undefined ? product.categoryOrder : 999,
+        productOrder: product.productOrder !== undefined ? product.productOrder : 999,
         robuxAmount: product.robuxAmount,
         price: product.price,
         description: product.description || '',
         image: product.image || '',
         rarity: product.rarity || '',
+        rarityColor: product.rarityColor || '#ff6b6b',
         isLimited: product.isLimited || false,
         active: product.active !== false
       });
@@ -103,11 +109,14 @@ const AdminInGameProducts = () => {
         game: categories[0]?.slug || '',
         itemName: '',
         itemType: '',
+        categoryOrder: 999,
+        productOrder: 999,
         robuxAmount: '',
         price: '',
         description: '',
         image: '',
         rarity: '',
+        rarityColor: '#ff6b6b',
         isLimited: false,
         active: true
       });
@@ -122,11 +131,14 @@ const AdminInGameProducts = () => {
       game: '',
       itemName: '',
       itemType: '',
+      categoryOrder: 999,
+      productOrder: 999,
       robuxAmount: '',
       price: '',
       description: '',
       image: '',
       rarity: '',
+      rarityColor: '#ff6b6b',
       isLimited: false,
       active: true
     });
@@ -324,7 +336,13 @@ const AdminInGameProducts = () => {
                           </div>
                         )}
                         {product.rarity ? (
-                          <span className={`rarity-badge ${product.rarity.toLowerCase()}`}>
+                          <span 
+                            className="rarity-badge"
+                            style={{ 
+                              background: product.rarityColor || '#ff6b6b',
+                              boxShadow: `0 2px 8px ${product.rarityColor || '#ff6b6b'}60`
+                            }}
+                          >
                             {product.rarity}
                           </span>
                         ) : (
@@ -407,10 +425,10 @@ const AdminInGameProducts = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Tipo de Item *</label>
+                  <label>🏷️ Tipo de Item * (Badge Visible)</label>
                   <input
                     type="text"
-                    placeholder="Ej: Frutas, Armas, Espadas, Mascotas, etc."
+                    placeholder="Ej: Gamepass, Frutas, Armas, Espadas, Mascotas, etc."
                     value={formData.itemType}
                     onChange={(e) => setFormData({ ...formData, itemType: e.target.value })}
                     required
@@ -422,7 +440,39 @@ const AdminInGameProducts = () => {
                     ))}
                   </datalist>
                   <small style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
-                    Puedes escribir cualquier tipo personalizado
+                    Este texto aparecerá como badge visible en la tarjeta del producto
+                  </small>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>📊 Orden de Categoría</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="999"
+                    value={formData.categoryOrder}
+                    onChange={(e) => setFormData({ ...formData, categoryOrder: parseInt(e.target.value) || 0 })}
+                    placeholder="0 = primero, 999 = último"
+                  />
+                  <small style={{ color: 'rgba(255, 215, 0, 0.7)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                    Controla el orden de aparición de esta categoría en el catálogo
+                  </small>
+                </div>
+                
+                <div className="form-group">
+                  <label>🔢 Orden del Producto</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="999"
+                    value={formData.productOrder}
+                    onChange={(e) => setFormData({ ...formData, productOrder: parseInt(e.target.value) || 0 })}
+                    placeholder="0 = primero, 999 = último"
+                  />
+                  <small style={{ color: 'rgba(255, 215, 0, 0.7)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                    Controla el orden individual de este producto dentro de su categoría
                   </small>
                 </div>
               </div>
@@ -486,6 +536,46 @@ const AdminInGameProducts = () => {
                     Puedes escribir cualquier rareza personalizada o dejar vacío
                   </small>
                 </div>
+
+                <div className="form-group">
+                  <label>Color de Rareza</label>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <input
+                      type="color"
+                      value={formData.rarityColor || '#ff6b6b'}
+                      onChange={(e) => setFormData({ ...formData, rarityColor: e.target.value })}
+                      style={{ width: '60px', height: '40px', cursor: 'pointer', border: '2px solid #333', borderRadius: '8px' }}
+                      title="Selector de color"
+                    />
+                    <input
+                      type="text"
+                      value={formData.rarityColor || '#ff6b6b'}
+                      onChange={(e) => setFormData({ ...formData, rarityColor: e.target.value })}
+                      placeholder="#E70303"
+                      pattern="^#[0-9A-Fa-f]{6}$"
+                      style={{ flex: 1, minWidth: '120px' }}
+                    />
+                    {formData.rarity && (
+                      <span 
+                        style={{ 
+                          padding: '8px 16px', 
+                          borderRadius: '20px', 
+                          background: formData.rarityColor || '#ff6b6b',
+                          color: '#fff',
+                          fontWeight: '700',
+                          fontSize: '0.85rem',
+                          whiteSpace: 'nowrap',
+                          boxShadow: `0 2px 8px ${formData.rarityColor || '#ff6b6b'}40`
+                        }}
+                      >
+                        {formData.rarity}
+                      </span>
+                    )}
+                  </div>
+                  <small style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                    Elige un color personalizado para la rareza (ej: #E70303 para rojo brillante)
+                  </small>
+                </div>
               </div>
 
               <div className="form-group">
@@ -504,7 +594,7 @@ const AdminInGameProducts = () => {
               {formData.image && (
                 <div className="image-preview">
                   <label>Vista Previa</label>
-                  <img src={formData.image} alt="Preview" onError={(e) => e.target.style.display = 'none'} />
+                  <img src={formData.image} alt="Preview" />
                 </div>
               )}
 

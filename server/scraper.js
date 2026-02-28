@@ -373,10 +373,17 @@ export const scrapePlaceGamePasses = async (placeId) => {
       return results;
     });
     
+    // Agregar el placeId a cada gamepass
+    const gamepassesWithPlaceId = gamepasses.map(gp => ({
+      ...gp,
+      placeId: parseInt(placeId)
+    }));
+    
     await releasePage(page);
     
-    console.log(`✅ Encontrados ${gamepasses.length} gamepasses en el place`);
-    return gamepasses;
+    console.log(`✅ Encontrados ${gamepassesWithPlaceId.length} gamepasses en el place`);
+    console.log(`🔍 Gamepasses con placeId ${placeId}:`, gamepassesWithPlaceId.map(g => `${g.name} (ID: ${g.id})`));
+    return gamepassesWithPlaceId;
     
   } catch (error) {
     console.error('❌ Error scrapeando gamepasses del place:', error.message);
@@ -406,10 +413,26 @@ export const scrapeGamePassDetails = async (gamepassId) => {
       const priceElement = document.querySelector('.price-text, .text-robux');
       const imgElement = document.querySelector('.game-pass-image img, .item-image img');
       
+      // Obtener el placeId desde el enlace del juego
+      // Intentar varios selectores posibles
+      let gameLink = document.querySelector('.asset-info a.text-name[href*="/games/"]');
+      if (!gameLink) {
+        gameLink = document.querySelector('a.text-name[href*="/games/"]');
+      }
+      if (!gameLink) {
+        gameLink = document.querySelector('a[href*="/games/"]');
+      }
+      
+      const placeId = gameLink ? gameLink.href.match(/\/games\/(\d+)/)?.[1] : null;
+      
+      console.log('🔍 Game link encontrado:', gameLink ? gameLink.href : 'No encontrado');
+      console.log('🔍 PlaceId extraído:', placeId);
+      
       return {
         name: titleElement ? titleElement.textContent.trim() : 'Gamepass',
         price: priceElement ? parseInt(priceElement.textContent.replace(/\D/g, '')) || 0 : 0,
-        thumbnail: imgElement ? imgElement.getAttribute('src') : null
+        thumbnail: imgElement ? imgElement.getAttribute('src') : null,
+        placeId: placeId ? parseInt(placeId) : null
       };
     });
     

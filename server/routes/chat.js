@@ -233,4 +233,107 @@ router.put('/conversations/:conversationId/status', requireAdmin, async (req, re
   }
 });
 
+// POST - Enviar mensaje con archivo adjunto (imagen/video)
+// NOTA: El middleware de multer se aplica desde proxy.js
+router.post('/:conversationId/upload', async (req, res) => {
+  try {
+    const conversationId = parseInt(req.params.conversationId); // Convertir a número
+    const { sender, senderType } = req.body;
+    
+    console.log(`📎 Intentando subir archivo para conversación ${conversationId}`);
+    console.log('File:', req.file);
+    console.log('Body:', req.body);
+    
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No se envió ningún archivo' });
+    }
+
+    const db = getDB('chat');
+    await db.read();
+
+    if (!db.data.conversations) {
+      db.data.conversations = [];
+    }
+
+    const conversation = db.data.conversations.find(c => c.id === conversationId);
+    if (!conversation) {
+      console.log(`❌ Conversación ${conversationId} no encontrada`);
+      return res.status(404).json({ success: false, error: 'Conversación no encontrada' });
+    }
+
+    if (!conversation.messages) {
+      conversation.messages = [];
+    }
+
+    const fileType = req.file.mimetype.startsWith('image/') ? 'image' : 'video';
+    const fileUrl = `/uploads/${req.file.filename}`;
+
+    // Inicializar db.data.messages si no existe
+    if (!db.data.messages) {
+      db.data.messages = [];
+    }
+
+    const newMessage = {
+      id: dbHelpers.generateId(db.data.messages), // ID único global
+      conversationId: conversationId, // Importante: Agregar conversationId
+      senderName: sender,
+      senderType,
+      message: '', // Mensaje vacío cuando es solo archivo
+      fileUrl,
+      fileType,
+      createdAt: new Date().toISOString(),
+      read: false
+    };
+
+    // Guardar en array global de mensajes (para que se carguen correctamente)
+    db.data.messages.push(newMessage);
+
+    // También actualizar la conversación
+    if (!conversation.messages) {
+      conversation.messages = [];
+    }
+    conversation.messages.push(newMessage);
+    conversation.lastMessage = fileType === 'image' ? '📷 Imagen' : '🎥 Video';
+    conversation.lastMessageTime = newMessage.createdAt;
+    conversation.unreadCount = senderType === 'user' ? (conversation.unreadCount || 0) + 1 : 0;
+
+    await db.write();
+
+    console.log(`✅ Archivo ${fileType} enviado en conversación ${conversationId}`);
+    res.json({ success: true, data: newMessage });
+  } catch (error) {
+    console.error('Error subiendo archivo:', error);
+    res.status(500).json({ success: false, error: error.message || 'Error al subir archivo' });
+  }
+});
+
+// DELETE - Eliminar un chat completo (ADMIN)
+router.delete('/:chatId', requireAdmin, async (req, res) => {
+  try {
+    const chatId = parseInt(req.params.chatId); // Convertir a número
+    const db = getDB('chat');
+    await db.read();
+
+    if (!db.data.conversations) {
+      db.data.conversations = [];
+    }
+
+    const chatIndex = db.data.conversations.findIndex(c => c.id === chatId);
+    
+    if (chatIndex === -1) {
+      return res.status(404).json({ success: false, error: 'Chat no encontrado' });
+    }
+
+    // Eliminar el chat
+    db.data.conversations.splice(chatIndex, 1);
+    await db.write();
+
+    console.log(`🗑️ Chat eliminado: ${chatId}`);
+    res.json({ success: true, message: 'Chat eliminado correctamente' });
+  } catch (error) {
+    console.error('Error eliminando chat:', error);
+    res.status(500).json({ success: false, error: 'Error al eliminar chat' });
+  }
+});
+
 export default router;

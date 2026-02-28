@@ -29,8 +29,11 @@ const Catalogo = () => {
       const response = await fetch(`${API_CONFIG.BASE_URL}/categories`);
       const data = await response.json();
       if (data.success) {
-        // Solo mostrar categorías activas
-        setCategories(data.data.filter(cat => cat.active));
+        // Solo mostrar categorías activas y ordenarlas por el campo 'order'
+        const sortedCategories = data.data
+          .filter(cat => cat.active)
+          .sort((a, b) => (a.order || 999) - (b.order || 999));
+        setCategories(sortedCategories);
       }
     } catch (error) {
       console.error('Error cargando categorías:', error);
@@ -44,12 +47,19 @@ const Catalogo = () => {
     slug: cat.slug,
     name: cat.name,
     image: cat.image,
+    order: cat.order || 999,
     category: 'Items in-game'
   }));
 
-  const filteredGames = games.filter(game => 
-    game.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGames = games
+    .filter(game => game.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => {
+      // Ordenar según el sortBy seleccionado
+      if (sortBy === 'nombre') return a.name.localeCompare(b.name);
+      if (sortBy === 'nuevo') return b.id - a.id;
+      // Por defecto (relevancia), usar el orden personalizado
+      return a.order - b.order;
+    });
 
   return (
     <div className="catalogo-page-new">

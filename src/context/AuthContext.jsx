@@ -86,10 +86,20 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (data.success) {
+        // Si requiere verificación de email
+        if (data.data.requiresVerification) {
+          return { 
+            success: true, 
+            user: data.data.user,
+            requiresVerification: true
+          };
+        }
+        
+        // Si no requiere verificación (login directo)
         setUser(data.data.user);
         setToken(data.data.token);
         localStorage.setItem('user-token', data.data.token);
-        return { success: true, user: data.data.user };
+        return { success: true, user: data.data.user, requiresVerification: false };
       } else {
         return { success: false, error: data.error };
       }

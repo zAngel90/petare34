@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Search, LayoutGrid, Filter, ShoppingCart, Plus, Minus, X, ArrowLeft, Gamepad2 } from 'lucide-react';
+import { Search, LayoutGrid, Filter, ShoppingCart, Plus, Minus, X, ArrowLeft, Gamepad2, Package } from 'lucide-react';
 import { API_CONFIG } from '../config/api';
-import RobloxUserSearch from '../components/RobloxUserSearch';
-import Checkout from '../components/Checkout';
-import NotificationModal from '../components/NotificationModal';
+import { useCart } from '../context/CartContext';
 import './GameItems.css';
 
 const GameItems = () => {
   const { gameSlug } = useParams();
   const navigate = useNavigate();
+  const { items: globalCartItems, addItem: addToGlobalCart, removeItem: removeFromGlobalCart, updateQuantity: updateGlobalQuantity } = useCart();
 
   
   // Estados
@@ -26,18 +25,16 @@ const GameItems = () => {
   const [showRarityMenu, setShowRarityMenu] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState('PEN');
   const [showCurrencyMenu, setShowCurrencyMenu] = useState(false);
-  const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [checkoutItem, setCheckoutItem] = useState(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showMobileCart, setShowMobileCart] = useState(false);
   const [showMobileGamesSidebar, setShowMobileGamesSidebar] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(window.innerWidth <= 1200);
+  
+  // Filtrar items del carrito global que son de tipo game items (no robux)
+  const cart = globalCartItems.filter(item => item.type !== 'robux');
 
   // Obtener monedas del backend
   const [currencies, setCurrencies] = useState([]);
@@ -154,7 +151,10 @@ const GameItems = () => {
             game: item.game,
             name: item.itemName,
             category: item.itemType || 'Items',
+            categoryOrder: item.categoryOrder !== undefined ? item.categoryOrder : 999,
+            productOrder: item.productOrder !== undefined ? item.productOrder : 999,
             rarity: item.rarity || null,
+            rarityColor: item.rarityColor || null,
             price: item.robuxAmount,
             priceUSD: item.price, // Precio en PEN (ya no se convierte)
             image: item.image || 'https://via.placeholder.com/150',
@@ -185,7 +185,10 @@ const GameItems = () => {
             game: item.game,
             name: item.itemName,
             category: item.itemType || 'Items',
+            categoryOrder: item.categoryOrder !== undefined ? item.categoryOrder : 999,
+            productOrder: item.productOrder !== undefined ? item.productOrder : 999,
             rarity: item.rarity || null,
+            rarityColor: item.rarityColor || null,
             price: item.robuxAmount,
             priceUSD: item.price,
             image: item.image || 'https://via.placeholder.com/150',
@@ -204,7 +207,22 @@ const GameItems = () => {
   };
 
   // Generar categorías y rarezas dinámicamente desde los items
-  const itemCategories = ['all', ...new Set(items.map(item => item.category))];
+  // Ordenar categorías según categoryOrder
+  const categoriesWithOrder = items.reduce((acc, item) => {
+    if (!acc.find(c => c.name === item.category)) {
+      acc.push({
+        name: item.category,
+        order: item.categoryOrder
+      });
+    }
+    return acc;
+  }, []);
+  
+  const sortedCategories = categoriesWithOrder
+    .sort((a, b) => a.order - b.order)
+    .map(c => c.name);
+  
+  const itemCategories = ['all', ...sortedCategories];
   const itemRarities = ['all', ...new Set(items.map(item => item.rarity).filter(Boolean))];
   
   const filteredAndSortedItems = items
@@ -226,7 +244,8 @@ const GameItems = () => {
           return b.name.localeCompare(a.name);
         case 'popularity':
         default:
-          return b.id - a.id;
+          // Ordenar por productOrder personalizado (menor número = primero)
+          return a.productOrder - b.productOrder;
       }
     });
 
@@ -241,35 +260,51 @@ const GameItems = () => {
   };
 
   const addToCart = (item) => {
-    const existingItem = cart.find(i => i.id === item.id);
-    if (existingItem) {
-      setCart(cart.map(i => 
-        i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-      ));
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
+    // Convertir el item al formato esperado por el carrito global
+    const cartItem = {
+      id: item.id,
+      name: item.name,
+      price: item.priceUSD,
+      image: item.image,
+      type: 'game-item',
+      game: item.game,
+      category: item.category,
+      rarity: item.rarity,
+      rarityColor: item.rarityColor,
+      description: item.description
+    };
+    addToGlobalCart(cartItem);
   };
 
   const removeFromCart = (itemId) => {
-    setCart(cart.filter(i => i.id !== itemId));
+    removeFromGlobalCart(itemId);
   };
 
   const updateQuantity = (itemId, delta) => {
-    setCart(cart.map(i => {
-      if (i.id === itemId) {
-        const newQuantity = i.quantity + delta;
-        return newQuantity > 0 ? { ...i, quantity: newQuantity } : i;
+    const item = cart.find(i => i.id === itemId);
+    if (item) {
+      const newQuantity = item.quantity + delta;
+      if (newQuantity > 0) {
+        updateGlobalQuantity(itemId, newQuantity);
+      } else {
+        removeFromGlobalCart(itemId);
       }
-      return i;
-    }).filter(i => i.quantity > 0));
+    }
   };
 
   const totalPrice = cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
   const totalPriceConverted = currentCurrency ? convertPrice(totalPrice) : totalPrice.toFixed(2);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const getRarityColor = (rarity) => {
+  const getRarityColor = (item) => {
+    // Si el item tiene un color personalizado, usarlo
+    if (item && typeof item === 'object' && item.rarityColor) {
+      return item.rarityColor;
+    }
+    
+    // Si se pasó solo el string de rareza (compatibilidad)
+    const rarity = typeof item === 'string' ? item : (item?.rarity || null);
+    
     if (!rarity) return '#6b7280'; // Gris neutral para items sin rareza
     
     const colors = {
@@ -498,21 +533,34 @@ const GameItems = () => {
 
         {/* Grid de items */}
         <div className="items-grid">
-          {filteredAndSortedItems.map(item => (
-            <div 
-              key={item.id} 
-              className="item-card"
-              onClick={() => openProductModal(item)}
-              style={{ cursor: 'pointer' }}
-            >
+          {filteredAndSortedItems.length === 0 ? (
+            <div className="no-items-message">
+              <Package size={64} style={{ color: '#444', marginBottom: '16px' }} />
+              <h3 style={{ color: '#fff', fontSize: '20px', marginBottom: '8px' }}>
+                No hay productos disponibles
+              </h3>
+              <p style={{ color: '#888', fontSize: '14px' }}>
+                {items.length === 0 
+                  ? 'Este juego aún no tiene productos agregados.'
+                  : 'No se encontraron productos con los filtros seleccionados. Intenta cambiar los filtros o la búsqueda.'}
+              </p>
+            </div>
+          ) : (
+            filteredAndSortedItems.map(item => (
+              <div 
+                key={item.id} 
+                className="item-card"
+                onClick={() => openProductModal(item)}
+                style={{ cursor: 'pointer' }}
+              >
               <div className="item-image-container">
                 <img src={item.image} alt={item.name} className="item-image" />
                 {item.rarity && (
                   <span 
                     className="item-rarity"
                     style={{ 
-                      background: `linear-gradient(135deg, ${getRarityColor(item.rarity)}22, ${getRarityColor(item.rarity)}44)`,
-                      borderColor: getRarityColor(item.rarity)
+                      background: `linear-gradient(135deg, ${getRarityColor(item)}22, ${getRarityColor(item)}44)`,
+                      borderColor: getRarityColor(item)
                     }}
                   >
                     {item.rarity}
@@ -522,7 +570,12 @@ const GameItems = () => {
               
               <div className="item-info">
                 <h3 className="item-name">{item.name}</h3>
-                <p className="item-category">{item.category}</p>
+                {/* Mostrar itemType como badge */}
+                {item.category && (
+                  <span className="classification-badge-text">
+                    {item.category}
+                  </span>
+                )}
               </div>
               
               <div className="item-footer">
@@ -548,7 +601,8 @@ const GameItems = () => {
                 </button>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
       </main>
 
@@ -646,14 +700,6 @@ const GameItems = () => {
               </div>
 
               <div className="cart-footer">
-                {/* Buscador de Usuario de Roblox */}
-                <div style={{ marginBottom: '20px' }}>
-                  <RobloxUserSearch 
-                    onUserSelect={setSelectedUser}
-                    selectedUser={selectedUser}
-                  />
-                </div>
-
                 <div className="cart-total">
                   <span className="total-label">Total</span>
                   <span className="total-amount">
@@ -668,13 +714,9 @@ const GameItems = () => {
                 <button 
                   className="checkout-btn"
                   onClick={() => {
-                    if (!selectedUser) {
-                      alert('Selecciona tu usuario de Roblox primero');
-                      return;
-                    }
-                    setShowCheckout(true);
+                    navigate('/checkout-items');
                   }}
-                  disabled={cart.length === 0 || !selectedUser}
+                  disabled={cart.length === 0}
                 >
                   Ir a Pagar →
                 </button>
@@ -690,38 +732,6 @@ const GameItems = () => {
         </aside>
       )}
 
-      {/* Checkout Modal */}
-      <Checkout
-        isOpen={showCheckout}
-        onClose={() => setShowCheckout(false)}
-        orderData={{
-          type: 'ingame',
-          product: cart[0], // Por ahora solo primer item del carrito
-          amount: cart.reduce((sum, item) => sum + item.quantity, 0),
-          price: currentCurrency 
-            ? `${currentCurrency.symbol}${parseFloat(totalPriceConverted).toFixed(2)}`
-            : `$${totalPrice.toFixed(2)}`,
-          currency: currentCurrency?.code || 'USD',
-          user: selectedUser,
-          gamepass: null
-        }}
-        onSuccess={(order) => {
-          setShowCheckout(false);
-          setShowSuccessModal(true);
-          setCart([]);
-          setSelectedUser(null);
-          console.log('Orden creada:', order);
-        }}
-      />
-
-      {/* Modal de éxito */}
-      <NotificationModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        type="success"
-        title="¡Orden Creada!"
-        message="Tu orden ha sido creada exitosamente. El administrador procesará tu pago pronto y te notificaremos cuando esté completada."
-      />
 
       {/* Product Detail Modal */}
       {showProductModal && selectedProduct && (
@@ -738,8 +748,8 @@ const GameItems = () => {
                   <span 
                     className="product-modal-rarity"
                     style={{ 
-                      background: `linear-gradient(135deg, ${getRarityColor(selectedProduct.rarity)}22, ${getRarityColor(selectedProduct.rarity)}44)`,
-                      borderColor: getRarityColor(selectedProduct.rarity)
+                      background: `linear-gradient(135deg, ${getRarityColor(selectedProduct)}22, ${getRarityColor(selectedProduct)}44)`,
+                      borderColor: getRarityColor(selectedProduct)
                     }}
                   >
                     {selectedProduct.rarity}
@@ -772,7 +782,7 @@ const GameItems = () => {
                   {!selectedProduct.isLimited && selectedProduct.rarity && (
                     <div className="info-item">
                       <span className="info-label">Rareza:</span>
-                      <span className="info-value" style={{ color: getRarityColor(selectedProduct.rarity) }}>
+                      <span className="info-value" style={{ color: getRarityColor(selectedProduct) }}>
                         {selectedProduct.rarity}
                       </span>
                     </div>

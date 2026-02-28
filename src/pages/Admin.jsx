@@ -16,7 +16,8 @@ import {
   Grid,
   Home,
   Menu,
-  X
+  X,
+  Mail
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import './Admin.css';
@@ -26,6 +27,7 @@ import AdminUsers from '../components/admin/AdminUsers';
 import AdminStats from '../components/admin/AdminStats';
 import AdminPaymentMethods from '../components/admin/AdminPaymentMethods';
 import AdminChat from '../components/admin/AdminChat';
+import AdminOrderChats from '../components/admin/AdminOrderChats';
 import AdminExchangeRates from '../components/admin/AdminExchangeRates';
 import AdminCategories from '../components/admin/AdminCategories';
 import AdminInGameProducts from '../components/admin/AdminInGameProducts';
@@ -33,6 +35,7 @@ import AdminCurrencies from '../components/admin/AdminCurrencies';
 import AdminHomeConfig from '../components/admin/AdminHomeConfig';
 import AdminReviews from '../components/admin/AdminReviews';
 import AdminGamepassHelp from '../components/admin/AdminGamepassHelp';
+import AdminEmailSettings from '../components/admin/AdminEmailSettings';
 
 const Admin = () => {
   // Recuperar el tab guardado del localStorage o usar 'orders' por defecto
@@ -74,7 +77,9 @@ const Admin = () => {
     { id: 'rates', label: 'Tasas de Cambio', icon: TrendingUp },
     { id: 'currencies', label: 'Monedas', icon: DollarSign },
     { id: 'categories', label: 'Categorías', icon: Grid },
+    { id: 'emails', label: 'Configuración Emails', icon: Mail },
     { id: 'chat', label: 'Chat Soporte', icon: FileText },
+    { id: 'order-chats', label: 'Chats Pedidos', icon: FileText },
   ];
 
   return (
@@ -152,7 +157,9 @@ const Admin = () => {
           {activeTab === 'rates' && <AdminExchangeRates />}
           {activeTab === 'currencies' && <AdminCurrencies />}
           {activeTab === 'categories' && <AdminCategories />}
+          {activeTab === 'emails' && <AdminEmailSettings />}
           {activeTab === 'chat' && <AdminChat />}
+          {activeTab === 'order-chats' && <AdminOrderChats />}
         </div>
       </main>
     </div>

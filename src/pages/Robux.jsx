@@ -1,15 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, DollarSign, Zap, CheckCircle, Users, Shield, ShoppingCart, HelpCircle, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import RobloxUserSearch from '../components/RobloxUserSearch';
-import GamePassSelector from '../components/GamePassSelector';
-import CommunityVerification from '../components/CommunityVerification';
-import Checkout from '../components/Checkout';
+import { ArrowLeft, DollarSign, Zap, CheckCircle, Users, Shield, ShoppingCart, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import NotificationModal from '../components/NotificationModal';
 import { API_CONFIG } from '../config/api';
 import './Robux.css';
 
 const Robux = () => {
+  const navigate = useNavigate();
   const [robuxPackages, setRobuxPackages] = useState([]);
   const [loadingPackages, setLoadingPackages] = useState(true);
   const [selectedPackage, setSelectedPackage] = useState(null);
@@ -17,14 +14,10 @@ const Robux = () => {
   const [customAmount, setCustomAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState('gamepass');
   const [selectedCurrency, setSelectedCurrency] = useState('PEN');
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedGamePass, setSelectedGamePass] = useState(null);
-  const [communityVerification, setCommunityVerification] = useState(null);
   const [recentPurchasesOpacity, setRecentPurchasesOpacity] = useState(1);
   const [currencies, setCurrencies] = useState([]);
   const [exchangeRates, setExchangeRates] = useState({});
   const [robuxRate, setRobuxRate] = useState(0.03); // Tasa dinámica desde backend
-  const [showCheckout, setShowCheckout] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [gamepassHelp, setGamepassHelp] = useState(null);
@@ -131,16 +124,6 @@ const Robux = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Reset gamepass when method changes
-  useEffect(() => {
-    if (selectedMethod !== 'gamepass') {
-      setSelectedGamePass(null);
-    }
-  }, [selectedMethod]);
-
-  const handleVerificationChange = (verification) => {
-    setCommunityVerification(verification);
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -314,7 +297,7 @@ const Robux = () => {
                     <input
                       type="number"
                       placeholder="Ingresa cantidad..."
-                      min={selectedMethod === 'gamepass' ? 2500 : 30}
+                      min={1}
                       value={customAmount}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -361,7 +344,7 @@ const Robux = () => {
               <div className="method-info">
                 {selectedMethod === 'gamepass' && (
                   <p className="method-note">
-                    💡 Monto mínimo: <strong>2,500 Robux</strong> | Puedes personalizar tu paquete
+                    💡 Puedes personalizar tu paquete con cualquier cantidad
                   </p>
                 )}
                 {selectedMethod === 'grupo' && (
@@ -389,39 +372,6 @@ const Robux = () => {
                   ))}
                 </div>
               </div>
-            )}
-
-            {/* Roblox User Search */}
-            <div className="section">
-              <RobloxUserSearch 
-                onUserSelect={setSelectedUser}
-                selectedUser={selectedUser}
-              />
-            </div>
-
-            {/* GamePass Selector (solo si método es gamepass) */}
-            {selectedMethod === 'gamepass' && (
-              <>
-                {/* Aviso importante - Desactivar precios regionales */}
-                <div className="section">
-                  <div className="important-notice-robux">
-                    <AlertCircle size={20} />
-                    <div className="notice-content-robux">
-                      <strong>⚠️ Importante: Desactiva los Precios Regionales</strong>
-                      <p>Recuerda desactivar los precios regionales en tu Gamepass antes de publicarlo. El precio debe coincidir exactamente con el que se muestra abajo.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="section">
-                  <GamePassSelector 
-                    userId={selectedUser?.id}
-                    selectedAmount={selectedAmount}
-                    onGamePassSelect={setSelectedGamePass}
-                    selectedGamePass={selectedGamePass}
-                  />
-                </div>
-              </>
             )}
 
             {/* Ayuda para crear gamepass */}
@@ -459,17 +409,6 @@ const Robux = () => {
               </div>
             )}
 
-            {/* Community Verification (solo si método es grupo) */}
-            {selectedMethod === 'grupo' && (
-              <div className="section">
-                <CommunityVerification 
-                  robloxUserId={selectedUser?.id}
-                  robloxUsername={selectedUser?.name}
-                  onVerificationChange={handleVerificationChange}
-                />
-              </div>
-            )}
-
           </div>
 
           {/* Right Sidebar - Summary */}
@@ -493,26 +432,6 @@ const Robux = () => {
                   <span>Método</span>
                   <span>{methods.find(m => m.id === selectedMethod)?.name}</span>
                 </div>
-                {selectedUser && (
-                  <div className="detail-row">
-                    <span>Usuario</span>
-                    <span className="user-summary">{selectedUser.name}</span>
-                  </div>
-                )}
-                {selectedGamePass && (
-                  <div className="detail-row">
-                    <span>Game Pass</span>
-                    <span className="gamepass-summary">{selectedGamePass.name}</span>
-                  </div>
-                )}
-                {selectedMethod === 'grupo' && communityVerification && (
-                  <div className="detail-row">
-                    <span>Entrega</span>
-                    <span className={`delivery-summary ${communityVerification.deliveryType}`}>
-                      {communityVerification.deliveryTime}
-                    </span>
-                  </div>
-                )}
               </div>
 
               <div className="summary-total">
@@ -538,36 +457,20 @@ const Robux = () => {
 
               <button 
                 className="buy-btn"
-                disabled={
-                  !selectedUser || 
-                  (selectedMethod === 'gamepass' && !selectedGamePass) ||
-                  (selectedMethod === 'grupo' && (!communityVerification || !communityVerification.isRegistered)) ||
-                  (selectedMethod === 'gamepass' && selectedAmount < 2500) ||
-                  (selectedMethod === 'grupo' && selectedAmount < 30)
-                }
-                onClick={() => setShowCheckout(true)}
+                onClick={() => {
+                  // Guardar el paquete seleccionado en localStorage
+                  localStorage.setItem('selectedRobuxPackage', JSON.stringify({
+                    ...selectedPackage,
+                    deliveryMethod: selectedMethod,
+                    amount: selectedAmount,
+                    price: totalPrice
+                  }));
+                  navigate('/checkout-robux');
+                }}
               >
                 <ShoppingCart size={20} />
-                COMPRAR
+                CONTINUAR AL CHECKOUT
               </button>
-              
-              {selectedMethod === 'grupo' && selectedUser && (!communityVerification || !communityVerification.isRegistered) && (
-                <div className="buy-disabled-message">
-                  ⚠️ Debes unirte a las 10 comunidades y registrarte para poder comprar
-                </div>
-              )}
-              
-              {selectedMethod === 'gamepass' && selectedAmount < 2500 && (
-                <div className="buy-disabled-message">
-                  ⚠️ El monto mínimo para Gamepass es 2,500 Robux
-                </div>
-              )}
-              
-              {selectedMethod === 'grupo' && selectedAmount < 30 && (
-                <div className="buy-disabled-message">
-                  ⚠️ El monto mínimo para Grupo es 30 Robux
-                </div>
-              )}
 
               <div className="rating">
                 <span className="stars">⭐⭐⭐⭐⭐</span>
@@ -622,30 +525,6 @@ const Robux = () => {
           </div>
         </div>
       </div>
-
-      {/* Checkout Modal */}
-      <Checkout
-        isOpen={showCheckout}
-        onClose={() => setShowCheckout(false)}
-        orderData={{
-          type: 'robux',
-          product: selectedPackage,
-          amount: selectedAmount,
-          price: formatPrice(totalPrice),
-          currency: selectedCurrency,
-          user: selectedUser,
-          gamepass: selectedGamePass,
-          // Agregar datos de descuento
-          discount: discount,
-          priceBeforeDiscount: discount > 0 ? formatPrice(priceBeforeDiscount) : null,
-          savedAmount: discount > 0 ? formatPrice(savedAmount) : null
-        }}
-        onSuccess={(order) => {
-          setShowCheckout(false);
-          setShowSuccessModal(true);
-          console.log('Orden creada:', order);
-        }}
-      />
 
       {/* Modal de éxito */}
       <NotificationModal

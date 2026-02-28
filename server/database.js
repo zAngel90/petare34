@@ -111,6 +111,9 @@ const defaultData = {
     conversations: [],
     messages: []
   },
+  orderChats: {
+    chats: []
+  },
   homeConfig: {
     slides: [
       {
@@ -194,6 +197,7 @@ export const initDatabases = async () => {
   databases.settings = await initDB('settings', defaultData.settings);
   databases.admins = await initDB('admins', defaultData.admins);
   databases.chat = await initDB('chat', defaultData.chat);
+  databases.orderChats = await initDB('orderChats', defaultData.orderChats);
   databases.homeConfig = await initDB('homeConfig', defaultData.homeConfig);
   databases.reviews = await initDB('reviews', defaultData.reviews);
   

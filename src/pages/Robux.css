@@ -5,12 +5,12 @@
 .robux-purchase-page {
   width: 100%;
   min-height: 100vh;
-  padding: 120px 20px 80px;
+  padding: 90px 15px 40px;
   background: #0a0a0a;
 }
 
 .purchase-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -19,16 +19,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .back-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   transition: color 0.3s;
 }
 
@@ -50,33 +50,33 @@
 /* Main Content Layout */
 .purchase-content {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 32px;
+  grid-template-columns: 1fr 350px;
+  gap: 25px;
 }
 
 /* Left Side */
 .purchase-left {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 22px;
 }
 
 .purchase-title-section {
   display: flex;
-  gap: 24px;
+  gap: 18px;
   align-items: flex-start;
 }
 
 .robux-icon-large {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 16px;
+  padding: 12px;
 }
 
 .robux-icon-large img {
@@ -87,30 +87,31 @@
 
 .purchase-title-section h1 {
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  margin: 0 0 8px 0;
+  margin: 0 0 6px 0;
 }
 
 .purchase-title-section p {
   color: rgba(255, 255, 255, 0.5);
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
 }
 
 .quick-features {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .feature-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(255, 255, 255, 0.05);
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -118,40 +119,40 @@
 .section {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 18px;
 }
 
 .section h3 {
   color: rgba(255, 255, 255, 0.4);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 1px;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
 }
 
 /* Amount Selection */
 .amounts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .amount-btn {
   position: relative;
   background: rgba(255, 255, 255, 0.03);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 12px;
   color: #fff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .amount-btn:hover {
@@ -207,11 +208,11 @@
 .custom-amount {
   background: rgba(255, 255, 255, 0.03);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .custom-amount input {
@@ -220,7 +221,7 @@
   border: none;
   outline: none;
   color: rgba(255, 255, 255, 0.4);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .custom-amount input::placeholder {
@@ -258,17 +259,17 @@
   position: relative;
   background: rgba(255, 255, 255, 0.03);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 12px;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .method-btn:hover {
@@ -408,38 +409,38 @@
 .summary-card {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 18px;
   position: sticky;
-  top: 140px;
+  top: 90px;
 }
 
 .summary-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .summary-amount {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 15px;
   position: relative;
 }
 
 .amount-label {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 900;
   color: #fff;
 }
 
 .amount-text {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -462,16 +463,16 @@
 .summary-details {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 16px 0;
-  margin-bottom: 16px;
+  padding: 12px 0;
+  margin-bottom: 12px;
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
 }
 
 .detail-row:last-child {
@@ -479,29 +480,29 @@
 }
 
 .summary-total {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .total-row > span:first-child {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .total-amount {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 5px;
 }
 
 .total-price {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: #fff;
 }
@@ -528,26 +529,26 @@
 
 .buy-btn {
   width: 100%;
-  background: #3b82f6;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
   border: none;
-  border-radius: 12px;
-  padding: 16px;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 10px;
+  padding: 14px;
+  color: #000;
+  font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
   transition: all 0.3s;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .buy-btn:hover {
-  background: #2563eb;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+  filter: brightness(1.1);
 }
 
 .buy-btn:disabled {
@@ -613,9 +614,9 @@
 .recent-purchases {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 20px;
-  max-height: 500px;
+  border-radius: 12px;
+  padding: 15px;
+  max-height: 450px;
   overflow: hidden;
 }
 
@@ -623,8 +624,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  font-size: 0.75rem;
+  margin-bottom: 12px;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 1px;
 }
@@ -647,7 +648,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 10px;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 8px;
 }
@@ -655,12 +656,12 @@
 .purchase-user {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   overflow: hidden;
@@ -676,18 +677,18 @@
 }
 
 .avatar-placeholder {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .user-name {
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
 .user-time {
   color: rgba(255, 255, 255, 0.4);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .purchase-amount {
@@ -696,7 +697,7 @@
   gap: 4px;
   color: #10b981;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 /* Responsive */

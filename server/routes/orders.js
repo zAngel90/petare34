@@ -1,6 +1,8 @@
 import express from 'express';
 import { getDB, dbHelpers } from '../database.js';
 import { requireAdmin, logAdminAction } from '../middleware/auth.js';
+import { processGamepassOrder } from '../services/rbxcrate.js';
+import emailService from '../services/emailService.js';
 
 const router = express.Router();
 
@@ -182,6 +184,7 @@ router.post('/', async (req, res) => {
       robloxUsername,
       robloxUserId,
       productType,
+      deliveryMethod, // ⭐ Método de entrega (gamepass o grupo)
       productDetails,
       amount,
       price,
@@ -213,6 +216,7 @@ router.post('/', async (req, res) => {
       robloxUsername,
       robloxUserId: robloxUserId || null,
       productType, // 'robux', 'gamepass', 'ingame'
+      deliveryMethod: deliveryMethod || null, // ⭐ 'gamepass' o 'grupo'
       productDetails, // Detalles del producto (gamepass ID, nombre, etc.)
       amount: parseInt(amount),
       price: parseFloat(price),
@@ -232,10 +236,135 @@ router.post('/', async (req, res) => {
     
     console.log(`✅ Nueva orden creada: #${newOrder.id} - Esperando verificación`);
     
+    // Enviar notificación a administradores
+    try {
+      const settingsDb = getDB('settings');
+      await settingsDb.read();
+      
+      const emailConfig = settingsDb.data.emailNotifications;
+      
+      if (emailConfig && emailConfig.enabled && emailConfig.notifyOnNewOrder && emailConfig.adminEmails && emailConfig.adminEmails.length > 0) {
+        await emailService.sendOrderNotificationToAdmins(newOrder, emailConfig.adminEmails);
+        console.log(`📧 Notificación enviada a ${emailConfig.adminEmails.length} administrador(es)`);
+      }
+    } catch (emailError) {
+      console.error('⚠️ Error enviando notificación por email:', emailError);
+      // No fallar la creación de la orden si el email falla
+    }
+    
     res.json({ success: true, data: newOrder });
   } catch (error) {
     console.error('Error creando orden:', error);
     res.status(500).json({ success: false, error: 'Error al crear orden' });
+  }
+});
+
+// POST - Procesar gamepass via RBX Crate (ADMIN)
+router.post('/:id/process-gamepass', requireAdmin, logAdminAction, async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const db = getDB('orders');
+    await db.read();
+    
+    const order = db.data.orders.find(o => o.id === parseInt(id));
+    if (!order) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Orden no encontrada' 
+      });
+    }
+    
+    // Verificar que sea una orden de robux con método gamepass
+    // Aceptar si tiene deliveryMethod=gamepass O si tiene gamepassId en productDetails
+    const isGamepassOrder = order.productType === 'robux' && 
+      (order.deliveryMethod === 'gamepass' || order.productDetails?.gamepassId);
+    
+    if (!isGamepassOrder) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Esta orden no es de tipo Robux por Gamepass' 
+      });
+    }
+    
+    // Verificar que tenga placeId
+    if (!order.productDetails?.placeId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Esta orden no tiene placeId. El gamepass debe tener el placeId configurado.' 
+      });
+    }
+    
+    console.log('🎫 Admin procesando gamepass con RBX Crate - Orden #' + id);
+    
+    // Usar gamepassRequiredPrice si existe (precio del gamepass con comisión)
+    // Si no, calcular: amount / 0.7
+    const gamepassPrice = order.productDetails?.gamepassRequiredPrice 
+      ? parseInt(order.productDetails.gamepassRequiredPrice)
+      : Math.ceil(parseInt(order.amount) / 0.7);
+    
+    console.log(`📊 Robux deseados: ${order.amount}, Precio del gamepass: ${gamepassPrice}`);
+    
+    // Generar un orderId único para RBX Crate (incluye timestamp para evitar duplicados)
+    const uniqueOrderId = `${order.id}-${Date.now()}`;
+    
+    const rbxCrateResult = await processGamepassOrder({
+      orderId: uniqueOrderId,
+      robloxUsername: order.robloxUsername,
+      robuxAmount: gamepassPrice, // Precio del gamepass, NO lo que recibe el cliente
+      placeId: parseInt(order.productDetails.placeId),
+      isPreOrder: true,
+      checkOwnership: false
+    });
+    
+    if (rbxCrateResult.success) {
+      console.log('✅ Gamepass procesado exitosamente con RBX Crate');
+      
+      // Actualizar la orden
+      const orderIndex = db.data.orders.findIndex(o => o.id === parseInt(id));
+      db.data.orders[orderIndex] = {
+        ...db.data.orders[orderIndex],
+        rbxCrateOrderId: rbxCrateResult.data.orderId || null,
+        rbxCrateStatus: rbxCrateResult.data.status || 'processing',
+        rbxCrateResponse: rbxCrateResult.data,
+        status: 'processing',
+        updatedAt: new Date().toISOString()
+      };
+      
+      await db.write();
+      
+      res.json({ 
+        success: true, 
+        message: 'Gamepass procesado exitosamente con RBX Crate',
+        data: db.data.orders[orderIndex],
+        rbxCrateData: rbxCrateResult.data
+      });
+    } else {
+      console.error('❌ Error procesando gamepass:', rbxCrateResult.error);
+      
+      // Guardar el error en la orden
+      const orderIndex = db.data.orders.findIndex(o => o.id === parseInt(id));
+      db.data.orders[orderIndex] = {
+        ...db.data.orders[orderIndex],
+        rbxCrateError: rbxCrateResult.error,
+        rbxCrateErrorAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      await db.write();
+      
+      return res.status(500).json({ 
+        success: false, 
+        error: rbxCrateResult.error,
+        details: 'Error al procesar el gamepass con RBX Crate. Verifica que el placeId y el username sean correctos.'
+      });
+    }
+  } catch (error) {
+    console.error('Error procesando gamepass:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Error al procesar gamepass con RBX Crate'
+    });
   }
 });
 
@@ -360,6 +489,26 @@ router.put('/:id/status', requireAdmin, logAdminAction, async (req, res) => {
     }
     
     await db.write();
+    
+    // Auto-eliminar chat de pedido si el estado es final (completed, cancelled, rejected)
+    if (status === 'completed' || status === 'cancelled' || status === 'rejected') {
+      try {
+        const chatDb = getDB('orderChats');
+        await chatDb.read();
+        
+        if (chatDb.data.conversations) {
+          const chatIndex = chatDb.data.conversations.findIndex(c => c.orderId === parseInt(id));
+          if (chatIndex !== -1) {
+            chatDb.data.conversations.splice(chatIndex, 1);
+            await chatDb.write();
+            console.log(`🗑️ Chat de pedido #${id} eliminado automáticamente (estado: ${status})`);
+          }
+        }
+      } catch (chatError) {
+        console.error('Error eliminando chat de pedido:', chatError);
+        // No lanzar error, solo loggear
+      }
+    }
     
     console.log(`✅ Orden #${id} actualizada a: ${status}`);
     

@@ -248,14 +248,10 @@ const Cart = () => {
           </div>
 
           {isAuthenticated ? (
-            <button 
-              className="checkout-btn" 
-              onClick={handleCheckout}
-              disabled={!paymentProofUrl || processingOrder}
-            >
+            <Link to="/checkout-items" className="checkout-btn">
               <CreditCard size={20} />
-              {processingOrder ? 'Procesando...' : 'Confirmar Orden'}
-            </button>
+              Proceder al Checkout
+            </Link>
           ) : (
             <div className="login-prompt">
               <p>Debes iniciar sesion para completar tu compra</p>

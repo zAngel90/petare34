@@ -123,7 +123,7 @@ router.get('/ingame', async (req, res) => {
 // POST - Crear producto in-game (ADMIN)
 router.post('/ingame', requireAdmin, logAdminAction, async (req, res) => {
   try {
-    const { game, itemName, itemType, robuxAmount, price, description, image, rarity, isLimited, active } = req.body;
+    const { game, itemName, itemType, categoryOrder, productOrder, classificationBadge, robuxAmount, price, description, image, rarity, rarityColor, isLimited, active } = req.body;
     
     // Validación: robuxAmount es opcional para Limiteds
     if (!game || !itemName || !price) {
@@ -142,11 +142,15 @@ router.post('/ingame', requireAdmin, logAdminAction, async (req, res) => {
       game,
       itemName,
       itemType: itemType || 'Items',
+      categoryOrder: categoryOrder !== undefined ? parseInt(categoryOrder) : 999, // Orden de la categoría (por defecto al final)
+      productOrder: productOrder !== undefined ? parseInt(productOrder) : 999, // Orden individual del producto
+      classificationBadge: classificationBadge || '', // Nuevo campo de badge personalizable
       robuxAmount: robuxAmount ? parseInt(robuxAmount) : null, // Puede ser null para Limiteds
       price: parseFloat(price),
       description: description || '',
       image: image || '',
       rarity: rarity || '', // Permitir vacío, no forzar 'COMMON'
+      rarityColor: rarityColor || '#ff6b6b', // Color personalizado para la rareza
       isLimited: isLimited || false,
       active: active !== false,
       createdAt: new Date().toISOString()
@@ -187,6 +191,18 @@ router.put('/ingame/:id', requireAdmin, logAdminAction, async (req, res) => {
     
     if ('rarity' in updates && !updates.rarity) {
       updates.rarity = ''; // Permitir vacío
+    }
+    
+    if ('rarityColor' in updates && !updates.rarityColor) {
+      updates.rarityColor = '#ff6b6b'; // Color por defecto si está vacío
+    }
+    
+    if ('categoryOrder' in updates) {
+      updates.categoryOrder = parseInt(updates.categoryOrder);
+    }
+    
+    if ('productOrder' in updates) {
+      updates.productOrder = parseInt(updates.productOrder);
     }
     
     const db = getDB('products');

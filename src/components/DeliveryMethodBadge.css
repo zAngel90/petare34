@@ -1,0 +1,71 @@
+.delivery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.delivery-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.badge-icon {
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+}
+
+.badge-label {
+  font-size: 0.85em;
+  font-weight: 800;
+}
+
+/* Tamaños */
+.delivery-badge-small {
+  padding: 4px 8px;
+  font-size: 0.65rem;
+  gap: 4px;
+}
+
+.delivery-badge-small .badge-icon {
+  font-size: 0.9em;
+}
+
+.delivery-badge-medium {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  gap: 6px;
+}
+
+.delivery-badge-large {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+.delivery-badge-large .badge-icon {
+  font-size: 1.2em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .delivery-badge {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+  
+  .delivery-badge-large {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+}

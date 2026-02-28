@@ -86,7 +86,10 @@ const GamePassSelector = ({ userId, selectedAmount, onGamePassSelect, selectedGa
     try {
       const gamepass = await getGamePassById(manualId);
       if (gamepass) {
-        onGamePassSelect(gamepass);
+        onGamePassSelect({
+          ...gamepass,
+          requiredPrice: requiredGamepassPrice
+        });
         setManualId('');
         setShowManualInput(false);
       } else {
@@ -99,17 +102,32 @@ const GamePassSelector = ({ userId, selectedAmount, onGamePassSelect, selectedGa
     }
   };
 
-  // Calcular precio requerido del gamepass basado en la cantidad de Robux
+  // Calcular precio requerido del gamepass basado en la cantidad de Robux (con comisión del 30%)
   const requiredGamepassPrice = selectedAmount ? Math.ceil(selectedAmount / 0.7) : 0;
+  
+  console.log('🔍 DEBUG GamePassSelector:', {
+    selectedAmount,
+    requiredGamepassPrice,
+    gamepasses: gamepasses.map(g => ({ id: g.id, name: g.name, price: g.price, type: typeof g.price }))
+  });
   
   // Filtrar y validar gamepasses
   const filteredGamepasses = gamepasses
     .filter(gp => gp.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    .map(gp => ({
-      ...gp,
-      isValid: gp.price === requiredGamepassPrice,
-      priceDifference: gp.price - requiredGamepassPrice
-    }));
+    .map(gp => {
+      const gpPrice = typeof gp.price === 'number' ? gp.price : parseInt(gp.price) || 0;
+      const requiredPrice = requiredGamepassPrice;
+      const isValid = gpPrice === requiredPrice;
+      
+      console.log(`🎮 Gamepass "${gp.name}": price=${gpPrice}, required=${requiredPrice}, valid=${isValid}`);
+      
+      return {
+        ...gp,
+        price: gpPrice,
+        isValid: isValid,
+        priceDifference: gpPrice - requiredPrice
+      };
+    });
   
   const hasValidGamepass = filteredGamepasses.some(gp => gp.isValid);
 
@@ -336,7 +354,10 @@ const GamePassSelector = ({ userId, selectedAmount, onGamePassSelect, selectedGa
                         key={gamepass.id}
                         type="button"
                         className={`gamepass-item ${!gamepass.isValid ? 'disabled' : ''} ${gamepass.isValid ? 'valid' : ''}`}
-                        onClick={() => gamepass.isValid && onGamePassSelect(gamepass)}
+                        onClick={() => gamepass.isValid && onGamePassSelect({
+                          ...gamepass,
+                          requiredPrice: requiredGamepassPrice
+                        })}
                         disabled={!gamepass.isValid}
                       >
                         {gamepass.thumbnail && (

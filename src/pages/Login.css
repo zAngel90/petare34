@@ -47,29 +47,45 @@
 }
 
 .login-tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   background: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
-  padding: 4px;
+  border-radius: 12px;
+  padding: 6px;
   margin-bottom: 28px;
+  gap: 8px;
 }
 
 .tab {
-  flex: 1;
   background: none;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border-radius: 10px;
   color: rgba(255, 255, 255, 0.6);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.2px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .tab.active {
-  background: #ffd16d;
+  background: linear-gradient(135deg, #ffd16d 0%, #ffbe3d 100%);
   color: #000;
+  box-shadow: 0 4px 12px rgba(255, 209, 109, 0.3);
+  transform: translateY(-1px);
 }
 
 .login-form {
@@ -150,33 +166,39 @@
   font-size: 0.9rem;
 }
 
-.submit-btn {
-  background: #ffd16d;
+.login-submit-btn {
+  background: linear-gradient(135deg, #ffd16d 0%, #ffbe3d 100%);
   color: #000;
   border: none;
-  padding: 16px;
+  padding: 18px 24px;
   border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  width: 100%;
+  min-height: 56px;
+  width: 100% !important;
   text-transform: none;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(255, 209, 109, 0.2);
 }
 
-.submit-btn:hover:not(:disabled) {
+.login-submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 209, 109, 0.3);
+  box-shadow: 0 8px 24px rgba(255, 209, 109, 0.4);
 }
 
-.submit-btn:disabled {
-  opacity: 0.7;
+.login-submit-btn:active:not(:disabled) {
+  transform: translateY(0px);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .loading-spinner-small {
@@ -194,12 +216,88 @@
   }
 }
 
+/* Separador */
+.login-separator {
+  position: relative;
+  text-align: center;
+  margin: 24px 0 20px;
+}
+
+.login-separator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-separator span {
+  position: relative;
+  background: rgba(20, 20, 20, 0.95);
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Botón de Discord */
+.social-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.social-login-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.discord-btn:hover {
+  background: rgba(88, 101, 242, 0.1);
+  border-color: rgba(88, 101, 242, 0.3);
+}
+
 @media (max-width: 480px) {
   .login-container {
     padding: 28px 20px;
   }
 
+  .tab {
+    padding: 12px 12px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+
+  .login-submit-btn {
+    padding: 16px 20px;
+    font-size: 15px;
+    min-height: 52px;
+  }
+
+  .login-header h1 {
+    font-size: 1.5rem;
+  }
+
   .social-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .social-login-btn {
+    padding: 12px 18px;
+    font-size: 14px;
   }
 }

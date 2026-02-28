@@ -9,8 +9,10 @@ import {
   ExternalLink,
   FileText,
   User,
-  Package
+  Package,
+  Zap
 } from 'lucide-react';
+import DeliveryMethodBadge from '../DeliveryMethodBadge';
 import { API_CONFIG } from '../../config/api';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import './AdminOrders.css';
@@ -24,12 +26,48 @@ const AdminOrders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', message: '', type: 'success' });
+  const [processingGamepass, setProcessingGamepass] = useState(false);
+  const [viewingProof, setViewingProof] = useState(null);
   const { getAuthHeaders } = useAdminAuth();
 
   const showNotification = (title, message, type = 'success') => {
     setModalContent({ title, message, type });
     setShowModal(true);
     setTimeout(() => setShowModal(false), 3000);
+  };
+
+  const handleProcessGamepass = async (orderId) => {
+    if (!confirm('¿Estás seguro de procesar este gamepass con RBX Crate?')) {
+      return;
+    }
+
+    setProcessingGamepass(true);
+    try {
+      const response = await fetch(
+        `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDERS.BASE}/${orderId}/process-gamepass`,
+        {
+          method: 'POST',
+          headers: getAuthHeaders()
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification('¡Éxito!', data.message || 'Gamepass procesado correctamente con RBX Crate', 'success');
+        fetchOrders(); // Recargar órdenes
+        setSelectedOrder(null); // Cerrar modal
+      } else {
+        // Mostrar error completo del backend
+        const errorMsg = data.error || 'Error desconocido';
+        const details = data.details || '';
+        showNotification('Error', `${errorMsg}\n${details}`, 'error');
+      }
+    } catch (error) {
+      showNotification('Error', error.message || 'Error al procesar gamepass con RBX Crate', 'error');
+    } finally {
+      setProcessingGamepass(false);
+    }
   };
 
   useEffect(() => {
@@ -55,6 +93,41 @@ const AdminOrders = () => {
       console.error('Error fetching orders:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleChangeStatus = async (orderId, newStatus) => {
+    if (!confirm(`¿Cambiar estado de la orden a "${newStatus}"?`)) {
+      return;
+    }
+
+    setVerifying(true);
+    try {
+      const response = await fetch(
+        `${API_CONFIG.BASE_URL}/orders/${orderId}/status`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders()
+          },
+          body: JSON.stringify({ status: newStatus })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification('¡Éxito!', `Orden actualizada a: ${newStatus}`, 'success');
+        fetchOrders();
+        setSelectedOrder(null);
+      } else {
+        showNotification('Error', data.error || 'Error al actualizar la orden', 'error');
+      }
+    } catch (error) {
+      showNotification('Error', error.message || 'Error al actualizar la orden', 'error');
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -208,7 +281,13 @@ const AdminOrders = () => {
                   </div>
                   <div className="info-item">
                     <Package size={16} />
-                    <span>{order.amount} {order.productType}</span>
+                    <span>{order.amount} Robux</span>
+                    {(order.deliveryMethod || order.productDetails?.deliveryMethod) && (
+                      <DeliveryMethodBadge method={order.deliveryMethod || order.productDetails.deliveryMethod} size="small" />
+                    )}
+                    {!order.deliveryMethod && !order.productDetails?.deliveryMethod && order.productDetails?.gamepassId && (
+                      <DeliveryMethodBadge method="gamepass" size="small" />
+                    )}
                   </div>
                   <div className="info-item">
                     <Clock size={16} />
@@ -273,6 +352,46 @@ const AdminOrders = () => {
                   </button>
                 </div>
               )}
+
+              {order.status === 'processing' && (
+                <div className="order-card-actions">
+                  <button
+                    className="btn-approve"
+                    onClick={() => handleChangeStatus(order.id, 'completed')}
+                    disabled={verifying}
+                  >
+                    <CheckCircle size={18} />
+                    Completar
+                  </button>
+                  <button
+                    className="btn-reject"
+                    onClick={() => handleChangeStatus(order.id, 'rejected')}
+                    disabled={verifying}
+                  >
+                    <XCircle size={18} />
+                    Cancelar
+                  </button>
+                  <button
+                    className="btn-details"
+                    onClick={() => setSelectedOrder(order)}
+                  >
+                    <Eye size={18} />
+                    Detalles
+                  </button>
+                </div>
+              )}
+
+              {(order.status === 'completed' || order.status === 'rejected' || order.status === 'cancelled') && (
+                <div className="order-card-actions">
+                  <button
+                    className="btn-details"
+                    onClick={() => setSelectedOrder(order)}
+                  >
+                    <Eye size={18} />
+                    Ver Detalles
+                  </button>
+                </div>
+              )}
             </div>
           ))
         )}
@@ -296,7 +415,15 @@ const AdminOrders = () => {
 
               <div className="detail-group">
                 <label>Producto</label>
-                <p>{selectedOrder.amount} {selectedOrder.productType}</p>
+                <p style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <span>{selectedOrder.amount} Robux</span>
+                  {(selectedOrder.deliveryMethod || selectedOrder.productDetails?.deliveryMethod) && (
+                    <DeliveryMethodBadge method={selectedOrder.deliveryMethod || selectedOrder.productDetails.deliveryMethod} size="medium" />
+                  )}
+                  {!selectedOrder.deliveryMethod && !selectedOrder.productDetails?.deliveryMethod && selectedOrder.productDetails?.gamepassId && (
+                    <DeliveryMethodBadge method="gamepass" size="medium" />
+                  )}
+                </p>
                 {selectedOrder.productType === 'robux' && selectedOrder.productDetails?.gamepassId && (
                   <a 
                     href={`https://www.roblox.com/game-pass/${selectedOrder.productDetails.gamepassId}`}
@@ -320,18 +447,26 @@ const AdminOrders = () => {
               {selectedOrder.paymentProof && (
                 <div className="detail-group">
                   <label>Comprobante</label>
-                  <a 
-                    href={selectedOrder.paymentProof} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="proof-image-link"
+                  <button
+                    onClick={() => setViewingProof(selectedOrder.paymentProof)}
+                    style={{ 
+                      background: 'none', 
+                      border: 'none', 
+                      padding: 0, 
+                      cursor: 'pointer',
+                      width: '100%'
+                    }}
                   >
                     <img 
                       src={selectedOrder.paymentProof} 
                       alt="Comprobante de pago"
                       className="proof-image"
+                      style={{ maxWidth: '100%', borderRadius: '8px', border: '2px solid #ffd700' }}
                     />
-                  </a>
+                  </button>
+                  <small style={{ color: '#888', marginTop: '8px', display: 'block' }}>
+                    Haz clic para ver en tamaño completo
+                  </small>
                 </div>
               )}
 
@@ -343,26 +478,82 @@ const AdminOrders = () => {
               )}
             </div>
 
-            {selectedOrder.status === 'awaiting_verification' && (
-              <div className="modal-footer">
-                <button
-                  className="btn-approve"
-                  onClick={() => handleVerifyPayment(selectedOrder.id, true)}
-                  disabled={verifying}
-                >
-                  <CheckCircle size={18} />
-                  Aprobar Pago
-                </button>
-                <button
-                  className="btn-reject"
-                  onClick={() => handleVerifyPayment(selectedOrder.id, false)}
-                  disabled={verifying}
-                >
-                  <XCircle size={18} />
-                  Rechazar Pago
-                </button>
+            <div className="modal-footer">
+              {/* Sección de botones de estado */}
+              <div className="status-actions-group">
+                {selectedOrder.status === 'awaiting_verification' && (
+                  <>
+                    <button
+                      className="btn-approve"
+                      onClick={() => handleVerifyPayment(selectedOrder.id, true)}
+                      disabled={verifying}
+                    >
+                      <CheckCircle size={18} />
+                      Aprobar Pago
+                    </button>
+                    <button
+                      className="btn-reject"
+                      onClick={() => handleVerifyPayment(selectedOrder.id, false)}
+                      disabled={verifying}
+                    >
+                      <XCircle size={18} />
+                      Rechazar Pago
+                    </button>
+                  </>
+                )}
+                
+                {selectedOrder.status === 'awaiting_verification' && (
+                  <button
+                    className="btn-processing"
+                    onClick={() => handleChangeStatus(selectedOrder.id, 'processing')}
+                    disabled={verifying}
+                  >
+                    <Clock size={18} />
+                    Marcar como En Proceso
+                  </button>
+                )}
+                
+                {selectedOrder.status === 'processing' && (
+                  <button
+                    className="btn-complete"
+                    onClick={() => handleChangeStatus(selectedOrder.id, 'completed')}
+                    disabled={verifying}
+                  >
+                    <CheckCircle size={18} />
+                    Marcar como Completado
+                  </button>
+                )}
+                
+                {(selectedOrder.status === 'awaiting_verification' || selectedOrder.status === 'processing') && (
+                  <button
+                    className="btn-cancel"
+                    onClick={() => handleChangeStatus(selectedOrder.id, 'rejected')}
+                    disabled={verifying}
+                  >
+                    <XCircle size={18} />
+                    Cancelar Orden
+                  </button>
+                )}
               </div>
-            )}
+
+              {/* Sección de Gamepass - SEPARADA Y DESTACADA */}
+              {selectedOrder.productDetails?.placeId && (
+                <div className="gamepass-section">
+                  <div className="gamepass-badge">
+                    <Zap size={16} />
+                    <span>Compra automática con RBX Crate disponible</span>
+                  </div>
+                  <button
+                    className="btn-process-gamepass"
+                    onClick={() => handleProcessGamepass(selectedOrder.id)}
+                    disabled={processingGamepass}
+                  >
+                    <Zap size={20} />
+                    {processingGamepass ? 'Procesando Gamepass...' : 'Comprar Gamepass Automáticamente'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -373,6 +564,62 @@ const AdminOrders = () => {
           <div className={`notification-content ${modalContent.type}`}>
             <h3>{modalContent.title}</h3>
             <p>{modalContent.message}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Comprobante de Pago */}
+      {viewingProof && (
+        <div className="modal-overlay" style={{ zIndex: 10000 }}>
+          <div className="proof-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="proof-header">
+              <h3>Comprobante de Pago</h3>
+              <button 
+                className="close-btn" 
+                onClick={() => setViewingProof(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#fff' }}
+              >
+                <XCircle size={32} />
+              </button>
+            </div>
+            <div className="proof-content">
+              <img 
+                src={viewingProof} 
+                alt="Comprobante" 
+                style={{ 
+                  maxWidth: '100%', 
+                  maxHeight: '75vh', 
+                  objectFit: 'contain',
+                  borderRadius: '8px'
+                }} 
+              />
+            </div>
+            <div className="proof-footer">
+              <a 
+                href={viewingProof} 
+                download 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="btn-download"
+              >
+                Descargar Comprobante
+              </a>
+              <button 
+                onClick={() => setViewingProof(null)}
+                style={{
+                  padding: '12px 24px',
+                  background: '#333',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  marginLeft: '10px'
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,0 +1,472 @@
+.admin-order-chats {
+  min-height: 100vh;
+  height: 100vh;
+  background: #0f0f1e;
+  padding: 0;
+  overflow: hidden;
+}
+
+.order-chats-container {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+/* Usar estilos similares al MyOrdersChat pero con tema admin */
+.orders-sidebar {
+  background: rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.orders-sidebar-header {
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.orders-sidebar-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.orders-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0; /* Fix para scroll */
+}
+
+.no-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+  text-align: center;
+}
+
+.no-orders svg {
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+.order-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.order-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.order-item.active {
+  background: rgba(255, 215, 0, 0.15) !important;
+  border-color: #FFD700 !important;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2) !important;
+}
+
+.order-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.order-id {
+  font-weight: 700;
+  color: #FFD700;
+  font-size: 13px;
+}
+
+.order-status {
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-awaiting_verification {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.status-processing,
+.status-in_progress {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border: 1px solid rgba(33, 150, 243, 0.4);
+}
+
+.status-completed {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.order-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-user-email {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #999;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+}
+
+.order-user-email span {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.order-user-email svg {
+  flex-shrink: 0;
+  color: #ffd16d;
+  width: 12px;
+  height: 12px;
+}
+
+.order-product-name {
+  font-size: 12px;
+  color: #ddd;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.order-meta-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.order-price {
+  font-size: 13px;
+  color: #00d084;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(0, 208, 132, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.order-date {
+  font-size: 10px;
+  color: #999;
+  font-weight: 500;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Área de chat */
+.order-chat-area {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.25);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.order-chat-header {
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; /* No se comprime */
+}
+
+.order-chat-header h3 {
+  margin: 0 0 6px 0;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.order-chat-header p {
+  margin: 0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.order-status-badge {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.btn-delete-chat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-delete-chat:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Mensajes */
+.order-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0; /* Fix para scroll */
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.order-message {
+  display: flex;
+  max-width: 75%; /* Más ancho para mejor lectura */
+}
+
+/* Admin: mensajes del admin a la derecha, del usuario a la izquierda */
+.admin-order-chats .order-message.admin-msg {
+  align-self: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+.admin-order-chats .order-message.user-msg {
+  align-self: flex-start !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+.message-bubble {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  word-wrap: break-word;
+  min-width: 100px; /* Mínimo ancho */
+}
+
+.order-message.admin-msg .message-bubble {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+  color: #000 !important;
+  font-weight: 500;
+}
+
+.message-bubble strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.message-bubble p {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.msg-time {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 8px;
+  opacity: 0.6;
+}
+
+/* Preview de archivo */
+.file-preview-order {
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.btn-remove:hover {
+  color: #ef4444;
+}
+
+.btn-send-file {
+  padding: 8px 16px;
+  background: #FFD700 !important;
+  color: #000 !important;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-send-file:hover:not(:disabled) {
+  background: #7c8ef5;
+}
+
+.btn-send-file:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Input */
+.order-chat-input {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-shrink: 0; /* No se comprime */
+}
+
+.btn-attach {
+  background: rgba(102, 126, 234, 0.2);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: #a5b4fc;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-attach:hover {
+  background: rgba(102, 126, 234, 0.3);
+}
+
+.order-chat-input input[type="text"] {
+  flex: 1;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.order-chat-input input[type="text"]:focus {
+  outline: none;
+  border-color: #FFD700 !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.order-chat-input button[type="submit"] {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%) !important;
+  border: none;
+  border-radius: 10px;
+  color: #000 !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.order-chat-input button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4) !important;
+}
+
+.order-chat-input button[type="submit"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* No order selected */
+.no-order-selected {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  text-align: center;
+  padding: 60px;
+}
+
+.no-order-selected svg {
+  margin-bottom: 24px;
+  opacity: 0.2;
+}
+
+.no-order-selected h3 {
+  margin: 0 0 10px 0;
+  color: #999;
+  font-size: 1.6rem;
+}
+
+.no-order-selected p {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+}

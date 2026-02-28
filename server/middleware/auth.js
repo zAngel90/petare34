@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'rls-store-secret-key-2024';
 
-// Verificar si el usuario está autenticado
+// Verificar si el usuario está autenticado (usuario o admin)
 export const isAuthenticated = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
@@ -31,11 +31,21 @@ export const isAuthenticated = (req, res, next) => {
     // Verificar JWT
     const decoded = jwt.verify(token, JWT_SECRET);
     
+    // Guardar en req.user (para usuarios normales) y también detectar admin
     req.user = {
       id: decoded.id,
       email: decoded.email,
       role: decoded.role
     };
+    
+    // Si es admin, también guardarlo en req.admin para compatibilidad
+    if (decoded.role === 'admin') {
+      req.admin = {
+        id: decoded.id,
+        email: decoded.email,
+        role: decoded.role
+      };
+    }
     
     next();
   } catch (error) {

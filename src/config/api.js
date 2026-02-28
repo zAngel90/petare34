@@ -93,6 +93,14 @@ export const API_CONFIG = {
       STATS: '/orders/stats/summary', // ADMIN
     },
     
+    // Order Chat (Chat de pedidos en tiempo real)
+    ORDER_CHAT: {
+      GET_MESSAGES: '/order-chat',
+      SEND_MESSAGE: '/order-chat',
+      UPLOAD_FILE: (id) => `/order-chat/${id}/upload`,
+      DELETE_CHAT: (id) => `/order-chat/${id}`,
+    },
+    
     // Products
     PRODUCTS: {
       ROBUX: '/products/robux',

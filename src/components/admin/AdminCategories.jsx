@@ -33,7 +33,9 @@ const AdminCategories = () => {
       const data = await response.json();
 
       if (data.success) {
-        setCategories(data.data);
+        // Ordenar por el campo 'order' para mostrar en el orden correcto
+        const sortedCategories = data.data.sort((a, b) => (a.order || 999) - (b.order || 999));
+        setCategories(sortedCategories);
       }
     } catch (error) {
       console.error('Error cargando categorías:', error);
@@ -180,46 +182,60 @@ const AdminCategories = () => {
   };
 
   const handleMoveUp = async (category) => {
-    const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+    const sortedCategories = [...categories].sort((a, b) => (a.order || 999) - (b.order || 999));
     const index = sortedCategories.findIndex(c => c.id === category.id);
     if (index === 0) return;
     const prevCategory = sortedCategories[index - 1];
     try {
       await fetch(`${API_CONFIG.BASE_URL}/categories/${category.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
         body: JSON.stringify({ order: prevCategory.order })
       });
       await fetch(`${API_CONFIG.BASE_URL}/categories/${prevCategory.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
         body: JSON.stringify({ order: category.order })
       });
-      loadCategories();
+      await loadCategories();
     } catch (error) {
       console.error('Error:', error);
+      setMessage({ type: 'error', text: '❌ Error al mover categoría' });
     }
   };
 
   const handleMoveDown = async (category) => {
-    const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+    const sortedCategories = [...categories].sort((a, b) => (a.order || 999) - (b.order || 999));
     const index = sortedCategories.findIndex(c => c.id === category.id);
     if (index === sortedCategories.length - 1) return;
     const nextCategory = sortedCategories[index + 1];
     try {
       await fetch(`${API_CONFIG.BASE_URL}/categories/${category.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
         body: JSON.stringify({ order: nextCategory.order })
       });
       await fetch(`${API_CONFIG.BASE_URL}/categories/${nextCategory.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        },
         body: JSON.stringify({ order: category.order })
       });
-      loadCategories();
+      await loadCategories();
     } catch (error) {
       console.error('Error:', error);
+      setMessage({ type: 'error', text: '❌ Error al mover categoría' });
     }
   };
 

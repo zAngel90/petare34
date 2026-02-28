@@ -99,7 +99,13 @@
   "gamepassHelp": {
     "enabled": true,
     "title": "¿Cómo crear un Gamepass?",
-    "description": "Sigue estos pasos para crear tu gamepass en Roblox Studio:\n\n1. Abre Roblox Studio y tu juego\n2. Ve a la pestaña VIEW → Game Explorer\n3. Haz clic derecho en tu juego → Add Pass\n4. Configura el nombre y descripción\n5. IMPORTANTE: Establece el precio EXACTO en Robux\n6. Desactiva los precios regionales\n7. Publica el gamepass\n\nUna vez creado, copia el ID del gamepass y úsalo en tu compra.",
+    "description": "Sigue estos pasos para crear tu gamepass en Roblox Studio:\\n\\n1. Abre Roblox Studio y tu juego\\n2. Ve a la pestaña VIEW → Game Explorer\\n3. Haz clic derecho en tu juego → Add Pass\\n4. Configura el nombre y descripción\\n5. IMPORTANTE: Establece el precio EXACTO en Robux\\n6. Desactiva los precios regionales\\n7. Publica el gamepass\\n\\nUna vez creado, copia el ID del gamepass y úsalo en tu compra.",
     "videoUrl": "http://localhost:3001/uploads/1770154926207-mxpny1xroWhatsApp Video 2026-01-08 at 1.25.47 PM.mp4"
+  },
+  "emailNotifications": {
+    "enabled": true,
+    "adminEmails": [],
+    "notifyOnNewOrder": true,
+    "requireEmailVerification": true
   }
 }

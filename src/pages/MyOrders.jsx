@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   Package, 
   Clock, 
@@ -9,16 +10,21 @@ import {
   Download,
   AlertCircle,
   Search,
-  Filter
+  Filter,
+  MessageSquare,
+  ArrowRight,
+  TrendingUp,
+  ShoppingBag,
+  DollarSign
 } from 'lucide-react';
 import { API_CONFIG } from '../config/api';
 import './MyOrders.css';
 
 const MyOrders = () => {
   const { user, getAuthHeaders } = useAuth();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -104,110 +110,12 @@ const MyOrders = () => {
     return matchesStatus && matchesSearch;
   });
 
-  const OrderModal = ({ order, onClose }) => {
-    const statusInfo = getStatusInfo(order.status);
-    
-    // Función auxiliar para obtener nombre del producto
-    const getProductName = () => {
-      if (order.productType === 'robux') {
-        return `${order.amount} Robux`;
-      }
-      return order.productDetails?.productName || 'Producto In-Game';
-    };
-    const StatusIcon = statusInfo.icon;
-
-    return (
-      <div className="modal-overlay" onClick={onClose}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Detalles del Pedido</h2>
-            <button className="modal-close" onClick={onClose}>×</button>
-          </div>
-
-          <div className="modal-body">
-            {/* Estado */}
-            <div className="order-status-banner" style={{ background: `${statusInfo.color}20`, borderLeft: `4px solid ${statusInfo.color}` }}>
-              <StatusIcon size={32} style={{ color: statusInfo.color }} />
-              <div>
-                <h3 style={{ color: statusInfo.color }}>{statusInfo.label}</h3>
-                <p>{statusInfo.description}</p>
-              </div>
-            </div>
-
-            {/* Info General */}
-            <div className="order-detail-section">
-              <h4>Información General</h4>
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <span className="detail-label">ID de Orden</span>
-                  <span className="detail-value">#{order.id}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Fecha</span>
-                  <span className="detail-value">{formatDate(order.createdAt)}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Método de Pago</span>
-                  <span className="detail-value">{order.paymentMethod}</span>
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Total</span>
-                  <span className="detail-value total-price">${order.price?.toFixed(2) || '0.00'} {order.currency || 'USD'}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Items */}
-            <div className="order-detail-section">
-              <h4>Productos</h4>
-              <div className="order-items-list">
-                <div className="order-item-detail">
-                  <div className="item-info">
-                    <span className="item-name">{getProductName()}</span>
-                    <span className="item-quantity">x1</span>
-                  </div>
-                  <span className="item-price">${order.price?.toFixed(2) || '0.00'} {order.currency || 'USD'}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Comprobante */}
-            {order.paymentProof && (
-              <div className="order-detail-section">
-                <h4>Comprobante de Pago</h4>
-                <div className="payment-proof-preview">
-                  <img 
-                    src={order.paymentProof}
-                    alt="Comprobante"
-                    className="proof-image"
-                  />
-                  <a 
-                    href={order.paymentProof}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-download"
-                  >
-                    <Download size={18} />
-                    Descargar Comprobante
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Notas Admin */}
-            {order.adminNotes && (
-              <div className="order-detail-section">
-                <h4>Notas del Administrador</h4>
-                <div className="admin-notes">
-                  <AlertCircle size={18} />
-                  <p>{order.adminNotes}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+  // Calcular estadísticas
+  const stats = {
+    total: orders.length,
+    completed: orders.filter(o => o.status === 'completed').length,
+    pending: orders.filter(o => o.status === 'awaiting_verification' || o.status === 'processing').length,
+    totalSpent: orders.filter(o => o.status === 'completed').reduce((sum, o) => sum + (parseFloat(o.price) || 0), 0)
   };
 
   if (!user) {
@@ -229,10 +137,51 @@ const MyOrders = () => {
           <h1>Mis Pedidos</h1>
           <p>Historial de todas tus compras</p>
         </div>
-        <div className="orders-stats">
-          <div className="stat-badge">
-            <Package size={20} />
-            <span>{orders.length} pedidos</span>
+        <button 
+          className="btn-order-chats"
+          onClick={() => navigate('/my-orders-chat')}
+        >
+          <MessageSquare size={18} />
+          Chats de Pedidos
+        </button>
+      </div>
+
+      {/* Estadísticas */}
+      <div className="orders-stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: '#ffd16d20', color: '#ffd16d' }}>
+            <ShoppingBag size={24} />
+          </div>
+          <div className="stat-info">
+            <span className="stat-label">Total Pedidos</span>
+            <span className="stat-value">{stats.total}</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: '#00d08420', color: '#00d084' }}>
+            <CheckCircle size={24} />
+          </div>
+          <div className="stat-info">
+            <span className="stat-label">Completados</span>
+            <span className="stat-value">{stats.completed}</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: '#ff950020', color: '#ff9500' }}>
+            <Clock size={24} />
+          </div>
+          <div className="stat-info">
+            <span className="stat-label">Pendientes</span>
+            <span className="stat-value">{stats.pending}</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: '#667eea20', color: '#667eea' }}>
+            <DollarSign size={24} />
+          </div>
+          <div className="stat-info">
+            <span className="stat-label">Total Gastado</span>
+            <span className="stat-value">${stats.totalSpent.toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -328,7 +277,9 @@ const MyOrders = () => {
                       <span className="item-preview-name">
                         {order.productType === 'robux' 
                           ? `${order.amount} Robux` 
-                          : order.productDetails?.productName || 'Producto In-Game'}
+                          : order.productDetails?.items && Array.isArray(order.productDetails.items)
+                            ? order.productDetails.items.map(item => item.name).join(', ')
+                            : order.productDetails?.productName || 'Producto In-Game'}
                       </span>
                       <span className="item-preview-qty">x1</span>
                     </div>
@@ -343,24 +294,17 @@ const MyOrders = () => {
                 <div className="order-card-footer">
                   <button 
                     className="btn-view-order"
-                    onClick={() => setSelectedOrder(order)}
+                    onClick={() => navigate(`/order/${order.id}`)}
                   >
                     <Eye size={18} />
-                    Ver Detalles
+                    Ver Detalles Completos
+                    <ArrowRight size={16} />
                   </button>
                 </div>
               </div>
             );
           })}
         </div>
-      )}
-
-      {/* Modal de Detalles */}
-      {selectedOrder && (
-        <OrderModal 
-          order={selectedOrder} 
-          onClose={() => setSelectedOrder(null)} 
-        />
       )}
     </div>
   );

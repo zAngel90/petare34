@@ -139,9 +139,17 @@ const ProductCard = ({ product, type = 'default' }) => {
       </button>
 
       <div className="limited-image">
-        <div className={`rarity-badge ${product.rarity.toLowerCase()}`}>
-          {product.rarity}
-        </div>
+        {product.rarity && (
+          <div 
+            className="rarity-badge"
+            style={{ 
+              background: product.rarityColor || '#ff6b6b',
+              boxShadow: `0 2px 8px ${product.rarityColor || '#ff6b6b'}60`
+            }}
+          >
+            {product.rarity}
+          </div>
+        )}
       </div>
 
       <div className="product-info">

@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getDB, dbHelpers } from '../database.js';
+import emailService from '../services/emailService.js';
 
 const router = express.Router();
 
@@ -42,18 +43,31 @@ router.post('/register', async (req, res) => {
     await db.read();
 
     // Verificar si el email ya existe
-    const existingUser = db.data.users.find(u => u.email === email);
-    if (existingUser) {
+    const existingEmail = db.data.users.find(u => u.email === email);
+    if (existingEmail) {
       return res.status(400).json({ 
         success: false, 
         error: 'Este email ya está registrado' 
       });
     }
 
+    // Verificar si el username ya existe
+    const existingUsername = db.data.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+    if (existingUsername) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Este nombre de usuario ya está en uso' 
+      });
+    }
+
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Crear nuevo usuario
+    // Generar código de verificación
+    const verificationCode = emailService.generateVerificationCode();
+    const verificationExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+    // Crear nuevo usuario (sin verificar)
     const newUser = {
       id: dbHelpers.generateId(db.data.users),
       email,
@@ -64,6 +78,9 @@ router.post('/register', async (req, res) => {
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
       role: 'user',
       active: true,
+      emailVerified: false, // Usuario no verificado inicialmente
+      verificationCode: verificationCode,
+      verificationExpires: verificationExpires.toISOString(),
       balance: 0,
       totalOrders: 0,
       totalSpent: 0,
@@ -73,27 +90,20 @@ router.post('/register', async (req, res) => {
     db.data.users.push(newUser);
     await db.write();
 
-    // Generar JWT
-    const token = jwt.sign(
-      { 
-        id: newUser.id, 
-        email: newUser.email, 
-        role: 'user' 
-      },
-      JWT_SECRET,
-      { expiresIn: '7d' } // 7 días para usuarios
-    );
+    // Enviar email de verificación
+    await emailService.sendVerificationEmail(email, username, verificationCode);
 
-    console.log(`✅ Usuario registrado: ${email}`);
+    console.log(`✅ Usuario registrado (pendiente verificación): ${email}`);
 
     // No enviar password en la respuesta
-    const { password: _, ...safeUser } = newUser;
+    const { password: _, verificationCode: __, ...safeUser } = newUser;
 
     res.json({
       success: true,
+      message: 'Usuario registrado. Por favor verifica tu email.',
       data: {
-        token,
-        user: safeUser
+        user: safeUser,
+        requiresVerification: true
       }
     });
   } catch (error) {
@@ -176,6 +186,154 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       error: 'Error al iniciar sesión' 
+    });
+  }
+});
+
+// POST - Verificar código de email
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email y código son requeridos' 
+      });
+    }
+
+    const db = getDB('users');
+    await db.read();
+
+    // Buscar usuario
+    const user = db.data.users.find(u => u.email === email);
+
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Usuario no encontrado' 
+      });
+    }
+
+    // Verificar si ya está verificado
+    if (user.emailVerified) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'El email ya está verificado' 
+      });
+    }
+
+    // Verificar si el código expiró
+    if (new Date() > new Date(user.verificationExpires)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'El código de verificación ha expirado. Solicita uno nuevo.' 
+      });
+    }
+
+    // Verificar código
+    if (user.verificationCode !== code) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Código de verificación incorrecto' 
+      });
+    }
+
+    // Marcar como verificado
+    user.emailVerified = true;
+    user.verificationCode = null;
+    user.verificationExpires = null;
+    await db.write();
+
+    // Enviar email de bienvenida
+    await emailService.sendWelcomeEmail(email, user.username);
+
+    // Generar JWT
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: 'user' 
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    console.log(`✅ Email verificado: ${email}`);
+
+    // No enviar password
+    const { password: _, ...safeUser } = user;
+
+    res.json({
+      success: true,
+      message: '¡Email verificado exitosamente!',
+      data: {
+        token,
+        user: safeUser
+      }
+    });
+  } catch (error) {
+    console.error('Error verificando email:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Error al verificar email' 
+    });
+  }
+});
+
+// POST - Reenviar código de verificación
+router.post('/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email es requerido' 
+      });
+    }
+
+    const db = getDB('users');
+    await db.read();
+
+    const user = db.data.users.find(u => u.email === email);
+
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        error: 'Usuario no encontrado' 
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'El email ya está verificado' 
+      });
+    }
+
+    // Generar nuevo código
+    const verificationCode = emailService.generateVerificationCode();
+    const verificationExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+    user.verificationCode = verificationCode;
+    user.verificationExpires = verificationExpires.toISOString();
+    await db.write();
+
+    // Enviar email
+    await emailService.sendVerificationEmail(email, user.username, verificationCode);
+
+    console.log(`✅ Código reenviado: ${email}`);
+
+    res.json({
+      success: true,
+      message: 'Código de verificación reenviado'
+    });
+  } catch (error) {
+    console.error('Error reenviando código:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Error al reenviar código' 
     });
   }
 });

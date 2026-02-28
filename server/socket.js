@@ -35,42 +35,76 @@ export function setupSocket(server) {
 
     // Usuario envía mensaje
     socket.on('message:send', (data) => {
-      const { conversationId, senderId, senderName, senderType, message } = data;
+      const { conversationId, senderId, senderName, senderType, message, fileUrl, fileType, createdAt, id } = data;
 
-      console.log(`💬 Mensaje de ${senderName} (${senderType}): ${message}`);
+      console.log(`💬 Mensaje de ${senderName} (${senderType}): ${message || (fileType ? `[${fileType}]` : '')}`);
+
+      // Preparar datos completos del mensaje (incluir TODOS los campos)
+      const messageData = {
+        id: id || Date.now(),
+        conversationId,
+        senderId,
+        senderName,
+        senderType,
+        message: message || '',
+        fileUrl: fileUrl || null,
+        fileType: fileType || null,
+        createdAt: createdAt || new Date().toISOString(),
+        timestamp: createdAt || new Date().toISOString()
+      };
 
       // Enviar mensaje a la conversación
       if (senderType === 'user') {
         // Usuario envía mensaje -> notificar a todos los admins
         adminSockets.forEach(adminSocketId => {
-          io.to(adminSocketId).emit('message:received', {
-            conversationId,
-            senderId,
-            senderName,
-            senderType,
-            message,
-            timestamp: new Date().toISOString()
-          });
+          io.to(adminSocketId).emit('message:received', messageData);
         });
       } else if (senderType === 'admin') {
         // Admin envía mensaje -> enviar al usuario específico
-        // Extraer userId de conversationId o buscar en base de datos
-        // Por ahora, broadcast a todos para simplicidad
         const userSocketId = connectedUsers.get(data.userId);
         if (userSocketId) {
-          io.to(userSocketId).emit('message:received', {
-            conversationId,
-            senderId,
-            senderName,
-            senderType,
-            message,
-            timestamp: new Date().toISOString()
-          });
+          io.to(userSocketId).emit('message:received', messageData);
         }
       }
 
       // Confirmar envío al remitente
       socket.emit('message:sent', { success: true });
+    });
+
+    // Mensajes de pedidos (order-chat)
+    socket.on('order-message:send', (data) => {
+      const { orderId, senderType, senderName, message, fileUrl, fileType, createdAt, id, userId } = data;
+
+      console.log(`Mensaje de pedido #${orderId} de ${senderName} (${senderType})`);
+
+      // Preparar datos completos del mensaje
+      const messageData = {
+        id: id || Date.now(),
+        orderId,
+        senderName,
+        senderType,
+        message: message || '',
+        fileUrl: fileUrl || null,
+        fileType: fileType || null,
+        createdAt: createdAt || new Date().toISOString()
+      };
+
+      // Enviar mensaje
+      if (senderType === 'user') {
+        // Usuario envía mensaje -> notificar a todos los admins
+        adminSockets.forEach(adminSocketId => {
+          io.to(adminSocketId).emit('order-message:received', messageData);
+        });
+      } else if (senderType === 'admin') {
+        // Admin envía mensaje -> enviar al usuario específico
+        const userSocketId = connectedUsers.get(userId);
+        if (userSocketId) {
+          io.to(userSocketId).emit('order-message:received', messageData);
+        }
+      }
+
+      // Confirmar envío
+      socket.emit('order-message:sent', { success: true });
     });
 
     // Usuario está escribiendo

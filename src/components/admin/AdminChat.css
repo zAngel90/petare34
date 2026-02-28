@@ -249,6 +249,128 @@
   border-color: #667eea;
 }
 
+/* Botón eliminar chat */
+.btn-delete-chat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-delete-chat:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Archivos en mensajes */
+.message-file {
+  margin: 8px 0;
+}
+
+.message-image {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.message-image:hover {
+  transform: scale(1.02);
+}
+
+.message-video {
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+/* Preview de archivo */
+.file-preview {
+  padding: 12px 20px;
+  background: rgba(102, 126, 234, 0.1);
+  border-top: 1px solid rgba(102, 126, 234, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.file-preview-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #a5b4fc;
+  font-size: 0.9rem;
+}
+
+.btn-remove-file {
+  background: rgba(239, 68, 68, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ef4444;
+  transition: all 0.2s;
+}
+
+.btn-remove-file:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.btn-send-file {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-send-file:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7c8ef5 0%, #8a5cb8 100%);
+  transform: translateY(-2px);
+}
+
+.btn-send-file:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botón adjuntar */
+.btn-attach {
+  background: rgba(102, 126, 234, 0.2);
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: #a5b4fc;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-attach:hover {
+  background: rgba(102, 126, 234, 0.3);
+  color: #c7d2fe;
+}
+
 /* Messages Content */
 .messages-content {
   flex: 1;

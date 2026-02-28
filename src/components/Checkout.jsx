@@ -147,16 +147,22 @@ const Checkout = ({
       console.log('Usuario actual:', user);
 
       // Crear orden con los campos que espera el backend
+      // Si tiene gamepassId, es gamepass; si no, es robux o ingame
+      const productType = orderData.gamepass?.id ? 'gamepass' : orderData.type;
+      
       const orderPayload = {
         userId: user.id,
         userEmail: user.email,
         robloxUsername: orderData.user?.name,
         robloxUserId: orderData.user?.id || null,
-        productType: orderData.type, // 'robux' o 'ingame'
+        productType: productType, // 'gamepass', 'robux' o 'ingame'
         productDetails: {
           productId: orderData.product?.id,
           productName: orderData.product?.name,
           gamepassId: orderData.gamepass?.id,
+          gamepassPlaceId: orderData.gamepass?.placeId,
+          gamepassRequiredPrice: orderData.gamepass?.requiredPrice, // Precio del gamepass con comisión
+          deliveryMethod: orderData.deliveryMethod || (orderData.gamepass?.id ? 'gamepass' : 'directo'), // Guardar método de entrega
           amount: orderData.amount
         },
         amount: orderData.amount,

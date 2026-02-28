@@ -429,7 +429,12 @@ const Home = () => {
                 <div className="ingame-card-content">
                   <span className="ingame-game-badge">{product.game || 'Roblox'}</span>
                   <h3 className="ingame-card-title">{product.itemName}</h3>
-                  <p className="ingame-card-description">{product.description || 'Producto premium del juego'}</p>
+                  {/* Mostrar itemType como badge */}
+                  {product.itemType && (
+                    <span className="classification-badge-text-home">
+                      {product.itemType}
+                    </span>
+                  )}
                   <div className="ingame-card-footer">
                     <span className="ingame-card-price">{primaryCurrency.symbol}{product.price}</span>
                     <Link to={`/game/${product.game?.toLowerCase()}`} className="ingame-card-btn">
@@ -475,9 +480,10 @@ const Home = () => {
                   <h3 className="limited-card-title">{product.itemName}</h3>
                   <div className="limited-game-info">
                     <span className="limited-game-tag">{product.game}</span>
-                    {product.rarity && (
-                      <span className={`limited-rarity rarity-${product.rarity.toLowerCase()}`}>
-                        {product.rarity}
+                    {/* Mostrar itemType como badge */}
+                    {product.itemType && (
+                      <span className="classification-badge-text-home">
+                        {product.itemType}
                       </span>
                     )}
                   </div>
