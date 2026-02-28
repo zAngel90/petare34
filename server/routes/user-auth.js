@@ -385,4 +385,89 @@ router.get('/verify', async (req, res) => {
   }
 });
 
+// POST - Login/Register con Discord
+router.post('/discord-login', async (req, res) => {
+  try {
+    const { discordId, email, username, avatar } = req.body;
+
+    if (!discordId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Discord ID es requerido'
+      });
+    }
+
+    const db = getDB('users');
+    await db.read();
+
+    // Buscar usuario por discordId
+    let user = db.data.users.find(u => u.discordId === discordId);
+
+    if (!user) {
+      // Crear nuevo usuario
+      const newUser = {
+        id: dbHelpers.generateId(db.data.users),
+        email: email || `${discordId}@discord.user`,
+        password: null, // No tiene password porque usa Discord
+        username: username || `discord_${discordId}`,
+        robloxUsername: '',
+        robloxUserId: null,
+        avatar: avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${discordId}`,
+        role: 'user',
+        active: true,
+        emailVerified: true, // Discord ya verificó el email
+        discordId: discordId, // ⭐ Guardar Discord ID
+        balance: 0,
+        totalOrders: 0,
+        totalSpent: 0,
+        createdAt: new Date().toISOString()
+      };
+
+      db.data.users.push(newUser);
+      await db.write();
+      user = newUser;
+
+      console.log(`✅ Nuevo usuario registrado via Discord: ${user.username}`);
+    } else {
+      // Actualizar avatar si cambió
+      if (avatar && user.avatar !== avatar) {
+        user.avatar = avatar;
+        await db.write();
+      }
+      console.log(`✅ Usuario existente login via Discord: ${user.username}`);
+    }
+
+    // Generar token JWT
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        avatar: user.avatar,
+        robloxUsername: user.robloxUsername,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en Discord login:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Error al procesar login con Discord'
+    });
+  }
+});
+
 export default router;

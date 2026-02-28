@@ -20,21 +20,80 @@ const Login = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  // Verificar si hay token de Discord en la URL
+  // Verificar si hay datos de Discord en la URL (después del callback)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const discordToken = params.get('discord_token');
+    const hash = window.location.hash;
     
-    if (discordToken) {
-      // Guardar token y redirigir
-      localStorage.setItem('user-token', discordToken);
-      window.location.href = '/';
+    if (hash.includes('access_token')) {
+      // Extraer el access token de Discord
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get('access_token');
+      
+      if (accessToken) {
+        handleDiscordCallback(accessToken);
+      }
     }
   }, []);
 
+  const handleDiscordCallback = async (accessToken) => {
+    try {
+      setLoading(true);
+      
+      // Obtener info del usuario de Discord
+      const userResponse = await fetch('https://discord.com/api/users/@me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      
+      const discordUser = await userResponse.json();
+      
+      if (!discordUser.id) {
+        setError('Error obteniendo datos de Discord');
+        return;
+      }
+      
+      // Enviar al backend para crear/login usuario
+      const response = await fetch(`${API_CONFIG.BASE_URL}/user-auth/discord-login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          discordId: discordUser.id,
+          email: discordUser.email,
+          username: discordUser.username,
+          avatar: discordUser.avatar 
+            ? `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`
+            : null
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success && data.token) {
+        localStorage.setItem('user-token', data.token);
+        navigate('/');
+      } else {
+        setError(data.error || 'Error al iniciar sesión con Discord');
+      }
+    } catch (err) {
+      setError('Error al procesar login con Discord');
+      console.error(err);
+    } finally {
+      setLoading(false);
+      // Limpiar la URL
+      window.history.replaceState({}, document.title, '/login');
+    }
+  };
+
   const handleDiscordLogin = () => {
-    // Redirigir al backend para iniciar OAuth de Discord
-    window.location.href = `${API_CONFIG.SERVER_URL}/auth/discord`;
+    const DISCORD_CLIENT_ID = '1477146018251538563';
+    const REDIRECT_URI = 'https://rbxlatamstore.com/login';
+    
+    const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20email`;
+    
+    window.location.href = discordAuthUrl;
   };
 
   const handleChange = (e) => {

@@ -9,11 +9,18 @@ const JWT_SECRET = process.env.JWT_SECRET || 'rls-store-secret-key-2024';
 // Credenciales de Discord
 const DISCORD_CLIENT_ID = '1477146018251538563';
 const DISCORD_CLIENT_SECRET = 'RD3TltW_pex_Rh3WMXHmCEDKqzYUGnP4';
-const DISCORD_REDIRECT_URI = 'https://rbxlatamstore.com/auth/discord/callback';
+const DISCORD_REDIRECT_URI = 'https://api.rbxlatamstore.com/auth/discord/callback';
 
 // GET - Redirigir a Discord para autenticación
 router.get('/discord', (req, res) => {
-  const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20email`;
+  const params = new URLSearchParams({
+    client_id: DISCORD_CLIENT_ID,
+    redirect_uri: DISCORD_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'identify email'
+  });
+  
+  const discordAuthUrl = `https://discord.com/oauth2/authorize?${params.toString()}`;
   res.redirect(discordAuthUrl);
 });
 
