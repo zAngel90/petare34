@@ -57,7 +57,18 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    // Formatos de imagen ampliados para el admin
+    const allowedTypes = [
+      'image/jpeg',          // .jpg, .jpeg
+      'image/png',           // .png
+      'image/webp',          // .webp (WebP - formato moderno y eficiente)
+      'image/svg+xml',       // .svg (Scalable Vector Graphics)
+      'image/avif',         // .avif (AV1 Image File Format - muy eficiente)
+      'image/tiff',         // .tiff, .tif (Tagged Image File Format)
+      'image/bmp',          // .bmp (Bitmap)
+      'image/gif',          // .gif (Graphics Interchange Format)
+      'application/pdf'      // .pdf (para comprobantes)
+    ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -81,7 +92,25 @@ const chatUpload = multer({
   storage: chatStorage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max para chat
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp', 'video/mp4', 'video/mov', 'video/avi', 'video/webm'];
+    // Formatos de imagen y video ampliados para chat
+    const allowedTypes = [
+      // Imágenes
+      'image/jpeg',          // .jpg, .jpeg
+      'image/png',           // .png
+      'image/webp',          // .webp (WebP - formato moderno y eficiente)
+      'image/svg+xml',       // .svg (Scalable Vector Graphics)
+      'image/avif',         // .avif (AV1 Image File Format - muy eficiente)
+      'image/tiff',         // .tiff, .tif (Tagged Image File Format)
+      'image/bmp',          // .bmp (Bitmap)
+      'image/gif',          // .gif (Graphics Interchange Format)
+      // Videos
+      'video/mp4',          // .mp4 (MPEG-4)
+      'video/webm',         // .webm (Web Media)
+      'video/mov',          // .mov (QuickTime)
+      'video/avi',          // .avi (Audio Video Interleave)
+      'video/mpeg',         // .mpeg, .mpg
+      'video/quicktime'     // .mov (QuickTime alternativo)
+    ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -221,7 +250,17 @@ const uploadMultiple = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max por imagen
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    // Formatos de imagen ampliados para reseñas
+    const allowedTypes = [
+      'image/jpeg',          // .jpg, .jpeg
+      'image/png',           // .png
+      'image/webp',          // .webp (WebP - formato moderno y eficiente)
+      'image/svg+xml',       // .svg (Scalable Vector Graphics)
+      'image/avif',         // .avif (AV1 Image File Format - muy eficiente)
+      'image/tiff',         // .tiff, .tif (Tagged Image File Format)
+      'image/bmp',          // .bmp (Bitmap)
+      'image/gif'           // .gif (Graphics Interchange Format)
+    ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {

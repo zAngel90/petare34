@@ -1,21 +1,12 @@
-import formData from 'form-data';
-import Mailgun from 'mailgun.js';
-
-// Configuración de Mailgun (directa, sin .env)
-const MAILGUN_CONFIG = {
-  apiKey: '2d84dc39d707c2a2dc29d9b2ed2f372a-58d4d6a2-33f17191',
-  domain: 'rbxlatamstore.com',
-  from: 'RLS Robux Store <noreply@rbxlatamstore.com>',
-  url: 'https://api.mailgun.net' // Region US
+// Configuración de Brevo (anteriormente Sendinblue)
+const BREVO_CONFIG = {
+  apiKey: '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',
+  apiUrl: 'https://api.brevo.com/v3/smtp/email',
+  sender: {
+    name: 'RLS Robux Store',
+    email: 'noreply@rbxlatamstore.com'
+  }
 };
-
-// Inicializar Mailgun
-const mailgun = new Mailgun(formData);
-const mg = mailgun.client({
-  username: 'api',
-  key: MAILGUN_CONFIG.apiKey,
-  url: MAILGUN_CONFIG.url
-});
 
 /**
  * Generar código de verificación de 6 dígitos
@@ -25,15 +16,44 @@ export const generateVerificationCode = () => {
 };
 
 /**
+ * Enviar email usando Brevo API
+ */
+const sendBrevoEmail = async (to, subject, htmlContent) => {
+  try {
+    const response = await fetch(BREVO_CONFIG.apiUrl, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': BREVO_CONFIG.apiKey,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: BREVO_CONFIG.sender,
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: htmlContent
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Error sending email');
+    }
+
+    const result = await response.json();
+    return { success: true, messageId: result.messageId };
+  } catch (error) {
+    console.error('❌ Error enviando email con Brevo:', error);
+    throw error;
+  }
+};
+
+/**
  * Enviar email de verificación con código
  */
 export const sendVerificationEmail = async (email, username, code) => {
   try {
-    const messageData = {
-      from: MAILGUN_CONFIG.from,
-      to: email,
-      subject: '🔐 Verifica tu cuenta en RLS Robux Store',
-      html: `
+    const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -77,12 +97,11 @@ export const sendVerificationEmail = async (email, username, code) => {
           </div>
         </body>
         </html>
-      `
-    };
+      `;
 
-    const result = await mg.messages.create(MAILGUN_CONFIG.domain, messageData);
+    const result = await sendBrevoEmail(email, '🔐 Verifica tu cuenta en RLS Robux Store', htmlContent);
     console.log('✅ Email de verificación enviado:', email);
-    return { success: true, messageId: result.id };
+    return result;
   } catch (error) {
     console.error('❌ Error enviando email de verificación:', error);
     return { success: false, error: error.message };
@@ -103,11 +122,7 @@ export const sendOrderNotificationToAdmins = async (order, adminEmails) => {
       ? `${order.amount} Robux`
       : (order.productDetails?.items?.map(i => i.name).join(', ') || 'Producto In-Game');
 
-    const messageData = {
-      from: MAILGUN_CONFIG.from,
-      to: adminEmails.join(', '),
-      subject: `🔔 Nuevo Pedido #${order.id} - ${order.userEmail}`,
-      html: `
+    const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -154,12 +169,16 @@ export const sendOrderNotificationToAdmins = async (order, adminEmails) => {
           </div>
         </body>
         </html>
-      `
-    };
+      `;
 
-    const result = await mg.messages.create(MAILGUN_CONFIG.domain, messageData);
+    // Enviar a cada admin por separado (Brevo no permite múltiples destinatarios en "to")
+    const promises = adminEmails.map(adminEmail => 
+      sendBrevoEmail(adminEmail, `🔔 Nuevo Pedido #${order.id} - ${order.userEmail}`, htmlContent)
+    );
+    
+    await Promise.all(promises);
     console.log('✅ Notificación enviada a admins:', adminEmails.join(', '));
-    return { success: true, messageId: result.id };
+    return { success: true };
   } catch (error) {
     console.error('❌ Error enviando notificación a admins:', error);
     return { success: false, error: error.message };
@@ -171,11 +190,7 @@ export const sendOrderNotificationToAdmins = async (order, adminEmails) => {
  */
 export const sendWelcomeEmail = async (email, username) => {
   try {
-    const messageData = {
-      from: MAILGUN_CONFIG.from,
-      to: email,
-      subject: '🎉 ¡Bienvenido a RLS Robux Store!',
-      html: `
+    const htmlContent = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -216,12 +231,11 @@ export const sendWelcomeEmail = async (email, username) => {
           </div>
         </body>
         </html>
-      `
-    };
+      `;
 
-    const result = await mg.messages.create(MAILGUN_CONFIG.domain, messageData);
+    const result = await sendBrevoEmail(email, '🎉 ¡Bienvenido a RLS Robux Store!', htmlContent);
     console.log('✅ Email de bienvenida enviado:', email);
-    return { success: true, messageId: result.id };
+    return result;
   } catch (error) {
     console.error('❌ Error enviando email de bienvenida:', error);
     return { success: false, error: error.message };

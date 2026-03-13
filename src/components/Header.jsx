@@ -221,11 +221,11 @@ const Header = () => {
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            <Link to="/" className="logo">
+            <Link to="/" className="logo-link">
               <img
                 src="https://i.postimg.cc/5xqCPXwc/RLS-LOGO.png"
                 alt="RLS Logo"
-                className="logo-img"
+                className="logo-image"
               />
             </Link>
 
@@ -262,12 +262,13 @@ const Header = () => {
           </div>
 
           <div className="header-right">
-            <div className="search-container">
+            {/* Búsqueda visible en desktop y mobile */}
+            <div className={`search-container ${isMobile ? 'mobile' : ''}`}>
               <form className="search-form" onSubmit={handleSearch}>
                 <Search className="search-icon" size={18} />
                 <input
                   type="text"
-                  placeholder="Buscar: 400 Robux, Blox Fruits, game pass..."
+                  placeholder={isMobile ? "Buscar..." : "Buscar: 400 Robux, Blox Fruits, game pass..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
@@ -343,8 +344,8 @@ const Header = () => {
                       e.target.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=default';
                     }}
                   />
-                  <span className="user-name">{user.username}</span>
-                  <ChevronDown size={16} />
+                  {!isMobile && <span className="user-name">{user.username}</span>}
+                  {!isMobile && <ChevronDown size={16} />}
                 </button>
 
                 {userMenuOpen && (
