@@ -137,6 +137,13 @@
   text-overflow: ellipsis;
 }
 
+.item-price-unit {
+  color: #ffd16d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 4px 0 8px 0;
+}
+
 .item-type {
   display: inline-block;
   background: rgba(255, 255, 255, 0.1);

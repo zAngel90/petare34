@@ -147,6 +147,7 @@ const Cart = () => {
 
               <div className="item-details">
                 <h3>{item.name}</h3>
+                <p className="item-price-unit">${parseFloat(item.price || 0).toFixed(2)} c/u</p>
                 <span className="item-type">{item.type}</span>
               </div>
 

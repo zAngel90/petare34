@@ -264,7 +264,7 @@ const GameItems = () => {
     const cartItem = {
       id: item.id,
       name: item.name,
-      price: item.priceUSD,
+      price: parseFloat(item.priceUSD) || 0, // Asegurar que price sea un número válido
       image: item.image,
       type: 'game-item',
       game: item.game,
