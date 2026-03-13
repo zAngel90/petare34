@@ -358,7 +358,7 @@ const AdminInGameProducts = () => {
                         <div className="product-prices">
                           <span className="robux-price">
                             <img src="/robux-logo.svg" alt="R$" style={{width: '16px', height: '16px'}} />
-                            {product.robuxAmount.toLocaleString()}
+                            {product.robuxAmount ? product.robuxAmount.toLocaleString() : 'N/A'}
                           </span>
                           <span className="usd-price">${parseFloat(product.price || 0).toFixed(2)}</span>
                         </div>
